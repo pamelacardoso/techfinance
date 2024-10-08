@@ -5,6 +5,8 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
 
+  LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,25 +15,25 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Bem-vindo!', style: TextStyle(fontSize: 24)),
-            SizedBox(height: 20),
+            const Text('Bem-vindo!', style: TextStyle(fontSize: 24)),
+            const SizedBox(height: 20),
             TextField(
               controller: _loginController,
-              decoration: InputDecoration(labelText: 'Login'),
+              decoration: const InputDecoration(labelText: 'Login'),
             ),
             TextField(
               controller: _senhaController,
-              decoration: InputDecoration(labelText: 'Senha'),
+              decoration: const InputDecoration(labelText: 'Senha'),
               obscureText: true,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextButton(
               onPressed: () {
                 // Adicione aqui a lógica de "esqueceu a senha"
               },
-              child: Text('Esqueceu a senha?'),
+              child: const Text('Esqueceu a senha?'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 // Lógica de autenticação (simulação)
@@ -49,12 +51,12 @@ class LoginScreen extends StatelessWidget {
                   );
                 } else {
                   // Exibe mensagem de erro
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Login ou senha inválidos'),
                   ));
                 }
               },
-              child: Text('Entrar'),
+              child: const Text('Entrar'),
             ),
           ],
         ),

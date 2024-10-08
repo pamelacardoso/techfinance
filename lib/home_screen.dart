@@ -4,7 +4,7 @@ import 'app_bar/custom_app_bar.dart'; // Importa a AppBar personalizada
 class HomeScreen extends StatelessWidget {
   final String usuario; // Nome do usuário (passado pelo login)
 
-  HomeScreen({required this.usuario});
+  const HomeScreen({super.key, required this.usuario});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   // Ação para produtos
                 },
-                child: Text('Produtos'),
+                child: const Text('Produtos'),
               ),
             ),
             SizedBox(
@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   // Ação para vendas
                 },
-                child: Text('Vendas'),
+                child: const Text('Vendas'),
               ),
             ),
             SizedBox(
@@ -50,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   // Ação para clientes
                 },
-                child: Text('Clientes'),
+                child: const Text('Clientes'),
               ),
             ),
             SizedBox(
@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   // Ação para títulos
                 },
-                child: Text('Títulos'),
+                child: const Text('Títulos'),
               ),
             ),
           ],

@@ -1,3 +1,9 @@
+import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
+import Constants from 'expo-constants';
+
+import * as FileSystem from 'expo-file-system';
+import { Platform } from 'react-native';
+
 export enum WhoEnum {
     me = 'me',
     bot = 'bot',
@@ -7,12 +13,6 @@ export interface MessageModel {
     message: string;
     who: WhoEnum;
 }
-
-import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
-import Constants from 'expo-constants';
-
-import * as FileSystem from 'expo-file-system';
-import { Platform } from 'react-native';
 
 export class GeminiController {
     private model: GenerativeModel;

@@ -1,7 +1,6 @@
 import Header from '@/components/header';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 
 interface GridItemProps {
@@ -11,15 +10,10 @@ interface GridItemProps {
 }
 
 function ProdutoScreen() {
-    const [imageUri, setImageUri] = useState<string | null>(null);
     const router = useRouter();
 
     const params = useLocalSearchParams();
     const username = params.usuario || 'User';
-
-    const pickImage = async () => {
-        // Function to pick an image from the gallery
-    };
 
     const renderGridItem = ({ title, icon, onPress }: GridItemProps) => (
         <TouchableOpacity onPress={onPress} className="flex-1 m-2">
@@ -32,7 +26,7 @@ function ProdutoScreen() {
 
     return (
         <View className="flex-1">
-            <Header imageUri={imageUri} pickImage={pickImage} setImageUri={setImageUri} username={'Admin'} />
+            <Header username={username} />
             <View className="flex-1 p-4">
                 <FlatList
                     data={[

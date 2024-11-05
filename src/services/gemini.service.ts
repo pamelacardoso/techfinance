@@ -14,7 +14,7 @@ export interface MessageModel {
     who: WhoEnum;
 }
 
-export class GeminiController {
+export class GeminiService {
     private model: GenerativeModel;
     private visionModel: GenerativeModel;
     private chat: any;

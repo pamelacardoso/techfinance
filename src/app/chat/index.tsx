@@ -1,4 +1,4 @@
-import { GeminiController, MessageModel, WhoEnum } from '@/controllers/gemini.controller';
+import { GeminiService, MessageModel, WhoEnum } from '@/services/gemini.service';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useRef, useState } from 'react';
@@ -9,10 +9,10 @@ export default function GeminiScreen() {
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
-    const controllerRef = useRef<GeminiController | null>(null);
+    const controllerRef = useRef<GeminiService | null>(null);
 
     useEffect(() => {
-        controllerRef.current = new GeminiController();
+        controllerRef.current = new GeminiService();
 
         // Send initial message
         const sendInitialMessage = async () => {

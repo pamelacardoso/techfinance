@@ -1,6 +1,7 @@
 import { useImageStore } from "@/hooks/useImageStore";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from "expo-router";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 
 interface HeaderProps {
@@ -10,6 +11,7 @@ interface HeaderProps {
 export default function Header({ username }: HeaderProps) {
   const imageUri = useImageStore((state) => state.imageUri);
   const setImageUri = useImageStore((state) => state.setImageUri);
+  const navigation = useNavigation();
 
   async function pickImage() {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -33,6 +35,12 @@ export default function Header({ username }: HeaderProps) {
 
   return (
     <View className="bg-gray-200 p-4 flex-row items-center">
+      {navigation.canGoBack() && (
+        <TouchableOpacity onPress={navigation.goBack} className="mr-4">
+          <MaterialIcons name="arrow-back" size={24} color="gray" />
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity onPress={pickImage}>
         <View className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden justify-center items-center">
           {imageUri ? (

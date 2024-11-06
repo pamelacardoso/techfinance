@@ -1,62 +1,120 @@
-// app/index.tsx
-import Header from '@/components/header';
-import { MaterialIcons } from '@expo/vector-icons';
-import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import Header from '@/components/header'
+import { MaterialIcons } from '@expo/vector-icons'
+import { router, useLocalSearchParams } from 'expo-router'
+import { useCallback } from 'react'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 interface MenuItem {
-  title: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
-  route?: string;
+  title: string
+  icon: keyof typeof MaterialIcons.glyphMap
+  route?: string
+  description: string
 }
 
 interface GridItemProps {
-  title: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
-  onPress?: () => void;
+  title: string
+  icon: keyof typeof MaterialIcons.glyphMap
+  description: string
+  onPress?: () => void
+  index: number
 }
 
 export default function HomeScreen() {
-  const params = useLocalSearchParams();
-  const username = params.usuario || 'User';
+  const params = useLocalSearchParams()
+  const username = params.usuario || 'User'
 
   const menuItems: MenuItem[] = [
-    { title: 'Produtos', icon: 'shopping-bag', route: '/product' },
-    { title: 'Vendas', icon: 'attach-money' },
-    { title: 'Clientes', icon: 'people' },
-    { title: 'Títulos', icon: 'assignment' },
-    { title: 'Relatórios', icon: 'bar-chart' },
-    { title: 'Configurações', icon: 'settings' },
-    { title: 'Dinho Bot', icon: 'chat', route: '/chat' },
-  ];
+    {
+      title: 'Produtos',
+      icon: 'shopping-bag',
+      route: '/product',
+      description: 'Gerencie seu inventário'
+    },
+    {
+      title: 'Vendas',
+      icon: 'attach-money',
+      description: 'Acompanhe suas vendas'
+    },
+    {
+      title: 'Clientes',
+      icon: 'people',
+      description: 'Gerencie seus clientes'
+    },
+    {
+      title: 'Títulos',
+      icon: 'assignment',
+      description: 'Controle financeiro'
+    },
+    {
+      title: 'Relatórios',
+      icon: 'bar-chart',
+      description: 'Análise de dados'
+    },
+    {
+      title: 'Configurações',
+      icon: 'settings',
+      description: 'Ajuste o sistema'
+    },
+    {
+      title: 'Dinho Bot',
+      icon: 'chat',
+      route: '/chat',
+      description: 'Assistente virtual'
+    },
+  ]
 
-  const GridItem: React.FC<GridItemProps> = ({ title, icon, onPress }) => (
-    <TouchableOpacity
-      onPress={onPress}
-      className="bg-blue-500 rounded-2xl flex-1 aspect-square justify-center items-center m-2"
+  const GridItem = useCallback<React.FC<GridItemProps>>(({ title, icon, description, onPress, index }) => (
+    <Animated.View
+      entering={FadeInDown}
+      className="w-1/2 p-2"
     >
-      <MaterialIcons name={icon} size={40} color="white" />
-      <Text className="text-white text-lg font-bold mt-2">{title}</Text>
-    </TouchableOpacity>
-  );
+      <TouchableOpacity
+        onPress={onPress}
+        className="bg-blue-500 rounded-3xl p-4 active:scale-95 transition-transfor shadow-md"
+      >
+        <View className="aspect-square justify-between">
+          <MaterialIcons name={icon} size={32} color="white" />
+          <View className="space-y-1">
+            <Text className="text-white text-lg font-bold">{title}</Text>
+            <Text className="text-blue-100 text-sm">{description}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  ), [])
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-gray-50">
       <Header username={username} />
 
-      <ScrollView className="flex-1 p-4">
-        <View className="flex-1 flex-row flex-wrap">
+      <ScrollView
+        className="flex-1 px-2"
+        showsVerticalScrollIndicator={false}
+        contentContainerClassName="pb-8"
+      >
+        <View className="p-4">
+          <Text className="text-2xl font-bold text-gray-800">
+            Bem-vindo, {username}
+          </Text>
+          <Text className="text-gray-500 mt-1">
+            O que você gostaria de fazer hoje?
+          </Text>
+        </View>
+
+        <View className="flex-row flex-wrap">
           {menuItems.map((item: MenuItem, index: number) => (
-            <View className="w-1/2" key={index}>
-              <GridItem
-                title={item.title}
-                icon={item.icon}
-                onPress={item.route ? () => router.push(item.route!) : undefined}
-              />
-            </View>
+            <GridItem
+              key={index}
+              index={index}
+              title={item.title}
+              icon={item.icon}
+              description={item.description}
+              onPress={item.route ? () => router.push(item.route!) : undefined}
+            />
           ))}
         </View>
       </ScrollView>
     </View>
-  );
+  )
 }

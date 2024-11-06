@@ -25,17 +25,26 @@ function ProdutoScreen() {
     );
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 bg-gray-50">
             <Header username={username} />
-            <View className="flex-1 p-4">
+            <View className="flex-1 px-2">
+                <View className="p-4">
+                    <Text className="text-2xl font-bold text-gray-800">
+                        Gerenciamento de Produtos
+                    </Text>
+                    <Text className="text-gray-500 mt-1">
+                        Escolha uma opção para começar
+                    </Text>
+                </View>
                 <FlatList
                     data={[
                         { title: 'Consultar Produto', icon: 'search', onPress: () => router.push('/product/search') },
-                        { title: 'Adicionar Produto', icon: 'add', onPress: () => {} },
+                        { title: 'Adicionar Produto', icon: 'add', onPress: () => { } },
                     ]}
                     renderItem={({ item }) => renderGridItem(item)}
                     keyExtractor={(item) => item.title}
                     numColumns={2}
+                    showsVerticalScrollIndicator={false}
                     columnWrapperStyle={{ justifyContent: 'space-between' }}
                     contentContainerStyle={{ paddingBottom: 16 }}
                 />

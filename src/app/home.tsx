@@ -46,8 +46,8 @@ export default function HomeScreen() {
 
       <ScrollView className="flex-1 p-4">
         <View className="flex-1 flex-row flex-wrap">
-          {menuItems.map((item) => (
-            <View className="w-1/2">
+          {menuItems.map((item: MenuItem, index: number) => (
+            <View className="w-1/2" key={index}>
               <GridItem
                 title={item.title}
                 icon={item.icon}

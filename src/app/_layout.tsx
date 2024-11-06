@@ -16,9 +16,8 @@ export default function Layout() {
             headerShown: true, title: 'Dinho Bot',
             headerStyle: { backgroundColor: '#000' }, headerTintColor: 'white'
           }} />
-          <Stack.Screen name="product/index" options={{ headerShown: false }}
-            initialParams={{ usuario: 'Admin' }}
-          />
+          <Stack.Screen name="product/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
+          <Stack.Screen name="product/search" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
         </Stack>
       </SafeAreaView>
     </>

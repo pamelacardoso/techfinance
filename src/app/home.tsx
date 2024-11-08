@@ -34,6 +34,7 @@ export default function HomeScreen() {
     {
       title: 'Vendas',
       icon: 'attach-money',
+      route: '/sales',
       description: 'Acompanhe suas vendas'
     },
     {

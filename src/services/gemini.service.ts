@@ -21,7 +21,7 @@ export class GeminiService {
     public messages: MessageModel[] = [];
 
     constructor() {
-        const genAI = new GoogleGenerativeAI(Constants.expoConfig?.extra?.geminiApiKey || '');
+        const genAI = new GoogleGenerativeAI(Constants.expoConfig?.extra?.geminiApiKey || 'AIzaSyD3DIuL66TpQCZ4-WdCpc5Fy3D0AVJ4QlI');
         this.model = genAI.getGenerativeModel({ model: 'gemini-pro' });
         this.visionModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
         this.startChat();

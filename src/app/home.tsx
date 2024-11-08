@@ -39,6 +39,7 @@ export default function HomeScreen() {
     {
       title: 'Clientes',
       icon: 'people',
+      route: '/customer',
       description: 'Gerencie seus clientes'
     },
     {

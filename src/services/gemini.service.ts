@@ -1,5 +1,5 @@
+import { env } from '@/config/env';
 import { GenerativeModel, GoogleGenerativeAI } from '@google/generative-ai';
-import Constants from 'expo-constants';
 
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
@@ -21,7 +21,7 @@ export class GeminiService {
     public messages: MessageModel[] = [];
 
     constructor() {
-        const genAI = new GoogleGenerativeAI(Constants.expoConfig?.extra?.geminiApiKey || 'AIzaSyD3DIuL66TpQCZ4-WdCpc5Fy3D0AVJ4QlI');
+        const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
         this.model = genAI.getGenerativeModel({ model: 'gemini-pro' });
         this.visionModel = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
         this.startChat();

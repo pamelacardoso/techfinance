@@ -1,44 +1,40 @@
 import Header from '@/components/header'
+import { Customer } from '@/models/customer'
+import { CustomerRepository } from '@/repositories/customer.repository'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useCallback, useState } from 'react'
-import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 
-interface Cliente {
-    id_cliente: number;
-    razao_cliente: string;
-    nome_fantasia: string;
-    cidade: string;
-    uf: string;
-    id_grupo: string;
-    descricao_grupo: string;
-}
 
 export default function CustomerSearch() {
     const params = useLocalSearchParams()
     const username = params.usuario || 'User'
 
     const [searchQuery, setSearchQuery] = useState('')
-    const [searchResults, setSearchResults] = useState<Cliente[]>([])
+    const [searchResults, setSearchResults] = useState<Customer[]>([])
+    const [loading, setLoading] = useState(false);
 
-    const searchProducts = useCallback((query: string) => {
-        const mockResults: Cliente[] = [
-            { id_cliente: 1, razao_cliente: 'Empresa A', nome_fantasia: 'Empresa A', cidade: 'Cidade A', uf: 'UF A', id_grupo: 'EL', descricao_grupo: 'Eletrônicos' },
-            { id_cliente: 2, razao_cliente: 'Empresa B', nome_fantasia: 'Empresa B', cidade: 'Cidade B', uf: 'UF B', id_grupo: 'EL', descricao_grupo: 'Eletrônicos' },
-            { id_cliente: 3, razao_cliente: 'Empresa C', nome_fantasia: 'Empresa C', cidade: 'Cidade C', uf: 'UF C', id_grupo: 'VS', descricao_grupo: 'Vestuário' },
-        ].filter(product =>
-            product.razao_cliente.toLowerCase().includes(query.toLowerCase()) ||
-            product.id_cliente.toString().includes(query)
-        )
-        setSearchResults(mockResults)
+    const customerRepository = new CustomerRepository();
+
+    const searchProducts = useCallback(async (query: string) => {
+        setLoading(true);
+        try {
+            const results = await customerRepository.search({ nome: query, limite: 10 });
+            setSearchResults(results);
+        } catch (error) {
+            console.error('Erro ao buscar clientes:', error);
+        } finally {
+            setLoading(false);
+        }
     }, [])
 
     const handleSearch = useCallback(() => {
         searchProducts(searchQuery)
     }, [searchQuery, searchProducts])
 
-    const renderProductItem = useCallback(({ item, index }: { item: Cliente, index: number }) => (
+    const renderProductItem = useCallback(({ item, index }: { item: Customer, index: number }) => (
         <Animated.View
             entering={FadeInDown.delay(index * 100)}
             className="bg-white rounded-lg shadow-md shadow-blue-500/10 mb-4 p-4"
@@ -55,7 +51,7 @@ export default function CustomerSearch() {
             <FlatList
                 data={searchResults}
                 renderItem={renderProductItem}
-                keyExtractor={(item) => item.id_cliente.toString()}
+                keyExtractor={(item) => item.id_cliente?.toString() || ''}
                 contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 16, paddingTop: 16 }}
                 ListHeaderComponent={
                     <>
@@ -81,9 +77,20 @@ export default function CustomerSearch() {
                     </>
                 }
                 ListEmptyComponent={
-                    <Text className="text-center text-gray-500 mt-4">
-                        Nenhum resultado encontrado. Tente uma nova busca.
-                    </Text>
+                    loading ? (
+                        <>
+                            <View className="flex-1 items-center justify-center">
+                                <ActivityIndicator size="large" color="#0000ff" />
+                            </View>
+                            <Text className="text-center text-gray-500 mt-4">
+                                Carregando...
+                            </Text>
+                        </>
+                    ) : (
+                        <Text className="text-center text-gray-500 mt-4">
+                            Nenhum resultado encontrado. Tente uma nova busca.
+                        </Text>
+                    )
                 }
             />
         </View>

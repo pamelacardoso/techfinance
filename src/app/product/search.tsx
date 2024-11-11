@@ -1,41 +1,39 @@
 import Header from '@/components/header'
+import { Product } from '@/models/product'
+import { ProductRepository } from '@/repositories/product.repository'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useCallback, useState } from 'react'
-import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-
-interface Produto {
-    codigo: string;
-    descricao_produto: string;
-    descricao_grupo: string;
-    id_grupo: string;
-}
 
 export default function ProductSearch() {
     const params = useLocalSearchParams()
     const username = params.usuario || 'User'
 
     const [searchQuery, setSearchQuery] = useState('')
-    const [searchResults, setSearchResults] = useState<Produto[]>([])
+    const [searchResults, setSearchResults] = useState<Product[]>([])
+    const [loading, setLoading] = useState(false);
 
-    const searchProducts = useCallback((query: string) => {
-        const mockResults: Produto[] = [
-            { codigo: '001', descricao_produto: 'Smartphone XYZ', descricao_grupo: 'Eletrônicos', id_grupo: 'EL' },
-            { codigo: '002', descricao_produto: 'Notebook ABC', descricao_grupo: 'Eletrônicos', id_grupo: 'EL' },
-            { codigo: '003', descricao_produto: 'Camisa Polo', descricao_grupo: 'Vestuário', id_grupo: 'VS' },
-        ].filter(product =>
-            product.descricao_produto.toLowerCase().includes(query.toLowerCase()) ||
-            product.codigo.includes(query)
-        )
-        setSearchResults(mockResults)
+    const productRepository = new ProductRepository();
+
+    const searchProducts = useCallback(async (query: string) => {
+        setLoading(true);
+        try {
+            const results = await productRepository.search({ descricao: query, limite: 10 });
+            setSearchResults(results);
+        } catch (error) {
+            console.error('Erro ao buscar clientes:', error);
+        } finally {
+            setLoading(false);
+        }
     }, [])
 
     const handleSearch = useCallback(() => {
         searchProducts(searchQuery)
     }, [searchQuery, searchProducts])
 
-    const renderProductItem = useCallback(({ item, index }: { item: Produto, index: number }) => (
+    const renderProductItem = useCallback(({ item, index }: { item: Product, index: number }) => (
         <Animated.View
             entering={FadeInDown.delay(index * 100)}
             className="bg-white rounded-lg shadow-md shadow-blue-500/10 mb-4 p-4"
@@ -78,9 +76,20 @@ export default function ProductSearch() {
                     </>
                 }
                 ListEmptyComponent={
-                    <Text className="text-center text-gray-500 mt-4">
-                        Nenhum resultado encontrado. Tente uma nova busca.
-                    </Text>
+                    loading ? (
+                        <>
+                            <View className="flex-1 items-center justify-center">
+                                <ActivityIndicator size="large" color="#0000ff" />
+                            </View>
+                            <Text className="text-center text-gray-500 mt-4">
+                                Carregando...
+                            </Text>
+                        </>
+                    ) : (
+                        <Text className="text-center text-gray-500 mt-4">
+                            Nenhum resultado encontrado. Tente uma nova busca.
+                        </Text>
+                    )
                 }
             />
         </View>

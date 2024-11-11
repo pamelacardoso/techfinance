@@ -31,5 +31,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     extra: {
         geminiApiKey: process.env.GEMINI_API_KEY,
+        supabaseUrl: process.env.SUPABASE_URL,
+        supabaseKey: process.env.SUPABASE_ANON_KEY
     },
 });

@@ -53,11 +53,7 @@ export default function HomeScreen() {
       icon: 'bar-chart',
       description: 'Análise de dados'
     },
-    {
-      title: 'Configurações',
-      icon: 'settings',
-      description: 'Ajuste o sistema'
-    },
+   
     {
       title: 'Dinho Bot',
       icon: 'chat',

@@ -1,9 +1,9 @@
 import { api } from "@/lib/api";
-import { Product } from "@/models/product";
+import { Product } from "@/models/product";  
 
 interface ProductQuerySchema {
-    descricao?: string;
-    grupo?: string;
+    nome?: string;
+    categoria?: string;
     limite?: number;
     pagina?: number;
 }
@@ -13,6 +13,6 @@ export class ProductRepository {
 
     async search(query: ProductQuerySchema): Promise<Product[]> {
         const response = await api.get(this.endpoint, { params: query });
-        return response.data;
+        return response.data;  
     }
 }

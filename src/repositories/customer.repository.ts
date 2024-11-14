@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import { Customer } from "@/models/customer";
+import { Customer } from "@/models/customer";  // A interface correta de Customer
 
 interface CustomerQuerySchema {
     nome?: string;
@@ -13,7 +13,6 @@ export class CustomerRepository {
 
     async search(query: CustomerQuerySchema): Promise<Customer[]> {
         const response = await api.get(this.endpoint, { params: query });
-        return response.data;
+        return response.data;  
     }
 }
-

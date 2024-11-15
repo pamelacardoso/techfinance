@@ -20,7 +20,7 @@ export default function ProductSearch() {
     const searchProducts = useCallback(async (query: string) => {
         setLoading(true);
         try {
-            const results = await productRepository.search({ descricao: query, limite: 10 });
+            const results = await productRepository.search({ nome: query, limite: 10 });
             setSearchResults(results);
         } catch (error) {
             console.error('Erro ao buscar clientes:', error);

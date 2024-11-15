@@ -21,6 +21,7 @@ export default function Layout() {
           <Stack.Screen name="customer/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="customer/search" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="sales/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
+          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>
       </SafeAreaView>
     </>

@@ -1,66 +1,43 @@
-import { useState, useEffect } from 'react';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { FlatList, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { CustomerRepository } from '@/repositories/customer.repository'; 
-import { ProductRepository } from '@/repositories/product.repository';
-import { Customer } from '@/models/customer';  // Interface de Customer
-import { Product } from '@/models/product';    // Interface de Product
-import Header from '@/components/header';      // Aparentemente o Header é um componente utilizado na página
+import Header from '@/components/header';
+import { Sales } from '@/models/sales';
+import { SalesRepository } from '@/repositories/sales.repository';
 
-const customerRepository = new CustomerRepository();
-const productRepository = new ProductRepository();
+const salesRepository = new SalesRepository();
 
 function SalesScreen() {
-    const router = useRouter();
     const params = useLocalSearchParams();
     const username = params.usuario || 'User';
 
-    const [clientes, setClientes] = useState<Customer[]>([]);   // Usando a interface Customer
-    const [produtos, setProdutos] = useState<Product[]>([]);     // Usando a interface Product
+    const [sales, setSales] = useState<Sales[]>([]);
+    const [loading, setLoadingSales] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [loadingClientes, setLoadingClientes] = useState(true);
-    const [loadingProdutos, setLoadingProdutos] = useState(true);
 
     useEffect(() => {
         const loadData = async () => {
             try {
-                setLoadingClientes(true);
-                setLoadingProdutos(true);
-
-                const clientesData = await customerRepository.search({ nome: searchQuery });
-
-                setClientes(clientesData);
+                setLoadingSales(true);
+                const clientesData = await salesRepository.getSales({});
+                setSales(clientesData);
             } catch (error) {
                 console.error('Erro ao buscar dados:', error);
             } finally {
-                setLoadingClientes(false);
-                setLoadingProdutos(false);
+                setLoadingSales(false);
             }
         };
 
         loadData();
     }, [searchQuery]);
 
-    const renderGridItem = ({ title, icon, onPress }: { title: string; icon: string; onPress: () => void }) => (
-        <TouchableOpacity onPress={onPress} className="flex-1 m-2">
-            <View className="bg-blue-500 rounded-lg p-6 items-center justify-center">
-                <Text className="text-white text-lg font-bold mt-2">{title}</Text>
-            </View>
-        </TouchableOpacity>
-    );
 
-    const filteredClientes = clientes.filter(
-        (cliente) =>
-            cliente.nome_fantasia.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            cliente.id_cliente.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    const filteredProdutos = produtos.filter(
-        (produto) =>
-            produto.nome_porduto.toLowerCase().includes(searchQuery.toLowerCase()) || // Nome correto da propriedade
-            produto.id_produto.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredSales = sales.filter(
+        (sale) =>
+            sale.descricaoProduto.toLowerCase().includes(searchQuery.toLowerCase())
+            || sale.nomeFantasia.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
@@ -78,38 +55,28 @@ function SalesScreen() {
                         className="flex-1 py-3 px-4 text-gray-700 rounded-lg border border-gray-300/60"
                         placeholder="Buscar cliente ou produto"
                         value={searchQuery}
-                        onChangeText={(text: string) => setSearchQuery(text)} 
+                        onChangeText={(text: string) => setSearchQuery(text)}
                     />
                     <TouchableOpacity onPress={() => {}} className="bg-blue-500 rounded-lg p-3 m-1">
                         <MaterialIcons name="search" size={24} color="white" />
                     </TouchableOpacity>
                 </View>
 
-                {/* Exibindo as opções para consultar cliente e produto */}
                 <FlatList
-                    data={[
-                        { title: 'Consultar Cliente', icon: 'search', onPress: () => router.push('/vendas/consultar_cliente') },
-                        { title: 'Consultar Produto', icon: 'search', onPress: () => router.push('/vendas/consultar_produto') }
-                    ]}
-                    renderItem={({ item }) => renderGridItem(item)}
-                    keyExtractor={(item) => item.title}
-                    numColumns={2}
-                    showsVerticalScrollIndicator={false}
-                    columnWrapperStyle={{ justifyContent: 'space-between' }}
-                    contentContainerStyle={{ paddingBottom: 16 }}
-                />
-
-                {/* Exibindo os resultados filtrados de clientes */}
-                <FlatList
-                    data={searchQuery ? filteredClientes : []}
-                    keyExtractor={(item) => item.id_cliente.toString()}
+                    data={searchQuery ? filteredSales : []}
+                    keyExtractor={(item) => item.idVenda.toString()}
                     renderItem={({ item }) => (
                         <View className="bg-white rounded-lg shadow-md p-4 mb-4">
-                            <Text className="font-bold text-gray-800">{item.nome_fantasia}</Text>
-                            <Text className="text-sm text-gray-600">ID: {item.id_cliente}</Text>
+                            <Text className="font-bold text-gray-800">{item.descricaoProduto}</Text>
+                            <Text className="text-sm text-gray-600">{item.nomeFantasia}</Text>
+                            <Text className="text-sm text-gray-600">{item.razaoCliente}</Text>
+                            <Text className="text-sm text-gray-600">{item.cidade}, {item.uf}</Text>
+                            <Text className="text-sm text-gray-600">Quantidade: {item.qtde}</Text>
+                            <Text className="text-sm text-gray-600">Valor Unitário: R$ {item.valorUnitario}</Text>
+                            <Text className="text-sm text-gray-600">Total: R$ {item.total}</Text>
                         </View>
                     )}
-                    ListEmptyComponent={loadingClientes ? (
+                    ListEmptyComponent={loading ? (
                         <ActivityIndicator size="large" color="#0000ff" />
                     ) : (
                         <Text className="text-center text-gray-500 mt-4">Nenhum cliente encontrado.</Text>

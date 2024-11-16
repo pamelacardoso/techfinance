@@ -51,9 +51,10 @@ export default function HomeScreen() {
     {
       title: 'Relatórios',
       icon: 'bar-chart',
-      description: 'Análise de dados'
+      description: 'Análise de dados',
+      route: '/reports',
     },
-   
+
     {
       title: 'Dinho Bot',
       icon: 'chat',

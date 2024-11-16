@@ -86,7 +86,7 @@ export default function SalesReport() {
                         onPress={getInsights}
                         className="bg-blue-600 rounded-lg p-3 mt-4 flex-row items-center justify-center"
                     >
-                        <Text className="text-white text-center ml-2">Obter Insights do Gemini</Text>
+                        <Text className="text-white text-center ml-2">Obter Insights do Dinho</Text>
                     </TouchableOpacity>
                     {insights ? (
                         <View className="mt-4 p-4 bg-gray-100 rounded-lg">

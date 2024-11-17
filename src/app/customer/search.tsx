@@ -1,4 +1,3 @@
-import Header from '@/components/header'
 import { Customer } from '@/models/customer'
 import { CustomerRepository } from '@/repositories/customer.repository'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -6,6 +5,7 @@ import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useState } from 'react'
 import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
+
 
 export default function CustomerSearch() {
   const params = useLocalSearchParams()
@@ -52,7 +52,11 @@ export default function CustomerSearch() {
         </View>
         <TouchableOpacity
           className="bg-blue-50 p-2 rounded-full"
-          onPress={() => {/* Implement customer details navigation */}}
+          // Navegação usando expo-router
+          onPress={() => {
+            // Redireciona para a tela de detalhes do cliente
+            window.location.href = `/customer/details?id=${item.id_cliente}`
+          }}
         >
           <MaterialIcons name="chevron-right" size={20} className="text-blue-500" />
         </TouchableOpacity>
@@ -62,11 +66,7 @@ export default function CustomerSearch() {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <Header username={username} />
-      <Animated.View
-        entering={FadeIn}
-        className="flex-1"
-      >
+      <Animated.View entering={FadeIn} className="flex-1">
         <FlatList
           data={searchResults}
           renderItem={renderCustomerItem}
@@ -78,12 +78,10 @@ export default function CustomerSearch() {
           }}
           ListHeaderComponent={
             <View className="space-y-4 mb-6">
-              <View>
-                <Text className="text-2xl font-bold text-gray-800">Buscar Clientes</Text>
-                <Text className="text-gray-500 mt-1">
-                  Digite o nome ou código do cliente para começar
-                </Text>
-              </View>
+              <Text className="text-2xl font-bold text-gray-800">Buscar Clientes</Text>
+              <Text className="text-gray-500 mt-1">
+                Digite o nome ou código do cliente para começar
+              </Text>
 
               <View className="flex-row items-center bg-white rounded-2xl shadow-sm border border-gray-100">
                 <View className="flex-1 flex-row items-center">

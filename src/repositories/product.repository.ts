@@ -1,7 +1,8 @@
 import { api } from "@/lib/api";
 import { Product } from "@/models/product";  
 
-interface ProductQuerySchema {
+
+export interface ProductQuerySchema {
     nome?: string;
     categoria?: string;
     limite?: number;

@@ -3,7 +3,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useCallback } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import Animated, { FadeInDown } from 'react-native-reanimated'
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 interface MenuItem {
   title: string
@@ -54,7 +54,6 @@ export default function HomeScreen() {
       description: 'Análise de dados',
       route: '/reports',
     },
-
     {
       title: 'Dinho Bot',
       icon: 'chat',
@@ -65,12 +64,15 @@ export default function HomeScreen() {
 
   const GridItem = useCallback<React.FC<GridItemProps>>(({ title, icon, description, onPress, index }) => (
     <Animated.View
-      entering={FadeInDown}
+      entering={FadeInDown.delay(index * 100).springify()}
       className="w-1/2 p-2"
     >
       <TouchableOpacity
         onPress={onPress}
-        className="bg-blue-500 rounded-3xl p-4 active:scale-95 transition-transfor shadow-md"
+        className="bg-blue-500 rounded-3xl p-4 active:scale-95 transition-transform"
+        accessibilityRole="button"
+        accessibilityLabel={title}
+        accessibilityHint={description}
       >
         <View className="aspect-square justify-between">
           <MaterialIcons name={icon} size={32} color="white" />
@@ -88,20 +90,23 @@ export default function HomeScreen() {
       <Header username={username} />
 
       <ScrollView
-        className="flex-1 px-2"
+        className="flex-1 px-4"
         showsVerticalScrollIndicator={false}
-        contentContainerClassName="pb-8"
+        contentContainerStyle={{ paddingBottom: 32 }}
       >
-        <View className="p-4">
-          <Text className="text-2xl font-bold text-gray-800">
+        <Animated.View
+          entering={FadeIn.delay(300).springify()}
+          className="py-6"
+        >
+          <Text className="text-3xl font-bold text-gray-800">
             Bem-vindo, {username}
           </Text>
-          <Text className="text-gray-500 mt-1">
+          <Text className="text-gray-500 mt-2 text-lg">
             O que você gostaria de fazer hoje?
           </Text>
-        </View>
+        </Animated.View>
 
-        <View className="flex-row flex-wrap">
+        <View className="flex-row flex-wrap -mx-2">
           {menuItems.map((item: MenuItem, index: number) => (
             <GridItem
               key={index}

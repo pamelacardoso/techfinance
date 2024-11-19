@@ -9,11 +9,11 @@ export interface SalesQuerySchema extends Partial<Sales> {
 export interface TopProducts {
   codigo_produto: string;
   descricao_produto: string;
-  quantidade_total?: number;
-  valor_total?: number;
+  quantidade_total?: string;
+  valor_total?: string;
   valor_minimo?: number;
   valor_maximo?: number;
-  percentual_diferenca?: number;
+  percentual_diferenca?: string;
 }
 
 export interface CompanyParticipation {

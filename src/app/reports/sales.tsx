@@ -1,6 +1,6 @@
 import Header from '@/components/header'
 import { Sales } from '@/models/sales'
-import { SalesQuerySchema, SalesRepository } from '@/repositories/sales.repository'
+import { SalesQuerySchema, SalesRepository, TopProducts } from '@/repositories/sales.repository'
 import { GeminiService } from '@/services/gemini.service'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
@@ -15,7 +15,7 @@ export default function SalesReport() {
   const params = useLocalSearchParams()
   const username = params.usuario || 'Admin'
 
-  const [sales, setSales] = useState<Sales[]>([])
+  const [sales, setSales] = useState<TopProducts[]>([])
   const [loading, setLoading] = useState(false)
   const [totalSales, setTotalSales] = useState(0)
   const [totalValue, setTotalValue] = useState(0)
@@ -30,11 +30,17 @@ export default function SalesReport() {
           dataEmissao: startDate,
         }
 
-        const salesData = await salesRepository.getSales(query)
+        const salesData = await salesRepository.getTopProductsByValue(query)
         setSales(salesData)
 
         const totalSalesCount = salesData.length
-        const totalSalesValue = salesData.reduce((acc, sale) => acc + parseFloat(sale.total || '0'), 0)
+        let totalSalesValue = 0;
+
+        for (const sale of salesData) {
+          totalSalesValue += Number(sale.valor_total) ?? 0;
+        }
+
+        console.log(totalSalesValue)
 
         setTotalSales(totalSalesCount)
         setTotalValue(totalSalesValue)
@@ -50,9 +56,7 @@ export default function SalesReport() {
 
   const getInsights = async () => {
     try {
-      const prompt = `Forneça insights sobre as seguintes vendas: Total de Vendas: ${totalSales}, Valor Total: R$ ${totalValue.toFixed(
-        2
-      )} em até 255 caracteres.`
+      const prompt = `Forneça insights sobre as seguintes vendas: Total de Vendas: ${totalSales}, Valor Total: ${totalValue.toFixed(2)} em até 260 caracteres. ${sales.map((s) => `Produto: ${s.codigo_produto} ${s.descricao_produto}\nValor Total de Vendas:${s.valor_total}\n`).join('\n')}`;
       await geminiService.sendMessage(prompt)
       const response = geminiService.messages[geminiService.messages.length - 1].message
       setInsights(response)
@@ -61,36 +65,19 @@ export default function SalesReport() {
     }
   }
 
-  const renderSalesItem = useCallback(({ item, index }: { item: Sales; index: number }) => (
+  const renderSalesItem = useCallback(({ item, index }: { item: TopProducts; index: number }) => (
     <Animated.View
       entering={FadeInDown.delay(index * 100)}
       className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-6 mb-4"
     >
       <View className="flex-row justify-between items-start mb-4">
         <View className="flex-1">
-          <Text className="text-lg font-bold text-gray-800">{item.descricaoProduto}</Text>
-          <Text className="text-sm text-gray-600 mt-1">{item.nomeFantasia}</Text>
+          <Text className="text-lg font-bold text-gray-800">{item.descricao_produto}</Text>
         </View>
         <View className="bg-blue-50 px-3 py-1 rounded-full">
-          <Text className="text-blue-600 font-medium">R$ {item.total}</Text>
-        </View>
-      </View>
-
-      <View className="space-y-2">
-        <View className="flex-row items-center">
-          <MaterialIcons name="business" size={16} className="text-gray-400 mr-2" />
-          <Text className="text-sm text-gray-600">{item.razaoCliente}</Text>
-        </View>
-        <View className="flex-row items-center">
-          <MaterialIcons name="location-on" size={16} className="text-gray-400 mr-2" />
-          <Text className="text-sm text-gray-600">{item.cidade}, {item.uf}</Text>
-        </View>
-        <View className="flex-row justify-between mt-2 pt-2 border-t border-gray-100">
-          <View className="flex-row items-center">
-            <MaterialIcons name="shopping-cart" size={16} className="text-gray-400 mr-2" />
-            <Text className="text-sm text-gray-600">Qtde: {item.qtde}</Text>
-          </View>
-          <Text className="text-sm text-gray-600">Valor Unit.: R$ {item.valorUnitario}</Text>
+          <Text className="text-blue-600 font-medium">{Number(item.valor_total).toLocaleString('pt-BR', {
+    currency: 'BRL'
+})}</Text>
         </View>
       </View>
     </Animated.View>
@@ -104,7 +91,7 @@ export default function SalesReport() {
           entering={FadeIn}
           className="px-4 pt-4 pb-2 bg-white shadow-sm"
         >
-          <Text className="text-2xl font-bold text-gray-800">Relatório de Vendas</Text>
+          <Text className="text-2xl font-bold text-gray-800">Top 10 Vendas - Insights em $</Text>
           <Text className="text-gray-500 mt-1">Veja abaixo as vendas realizadas</Text>
 
           <View className="flex-row justify-between items-center mt-6 bg-blue-50 p-4 rounded-2xl">
@@ -115,7 +102,7 @@ export default function SalesReport() {
             <View>
               <Text className="text-sm text-blue-600 font-medium">Valor Total</Text>
               <Text className="text-2xl font-bold text-gray-800 mt-1">
-                R$ {totalValue.toFixed(2)}
+                {totalValue.toLocaleString('pt-br', { currency: 'BRL' })}
               </Text>
             </View>
           </View>
@@ -159,7 +146,7 @@ export default function SalesReport() {
           <FlatList
             data={sales}
             renderItem={renderSalesItem}
-            keyExtractor={(item) => item.idVenda.toString()}
+            keyExtractor={(item) => item.codigo_produto.toString()}
             contentContainerStyle={{ padding: 16 }}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={

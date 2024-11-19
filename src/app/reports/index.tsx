@@ -25,7 +25,9 @@ export default function ReportsScreen() {
     const username = params.usuario || 'User';
 
     const reports = [
-        { title: 'Relatório de Vendas', icon: 'bar-chart', onPress: () => router.push('/reports/sales') },
+        { title: 'Top 10 Vendas \n Insights em $', icon: 'bar-chart', onPress: () => router.push('/reports/sales') },
+        { title: 'Top 10 Vendas \n Insights em qtd.', icon: 'bar-chart', onPress: () => router.push('/reports/sales-by-qtd') },
+        { title: 'Preço min-max \n    variação', icon: 'auto-graph', onPress: () => router.push('/reports/sales-min-max') },
         { title: 'Relatório de Clientes', icon: 'people', onPress: () => router.push('/reports/customers') },
         { title: 'Relatório de Produtos', icon: 'shopping-bag', onPress: () => router.push('/reports/products') },
     ];

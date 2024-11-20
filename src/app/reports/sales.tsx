@@ -1,11 +1,10 @@
 import Header from '@/components/header'
-import { Sales } from '@/models/sales'
 import { SalesQuerySchema, SalesRepository, TopProducts } from '@/repositories/sales.repository'
 import { GeminiService } from '@/services/gemini.service'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
-import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 const salesRepository = new SalesRepository()
@@ -123,19 +122,6 @@ export default function SalesReport() {
               <Text className="text-gray-800 leading-relaxed">{insights}</Text>
             </Animated.View>
           ) : null}
-
-          <View className="mt-6">
-            <Text className="text-base font-semibold text-gray-800 mb-2">Filtrar por Data</Text>
-            <View className="flex-row items-center bg-gray-50 rounded-xl border border-gray-200">
-              <MaterialIcons name="calendar-today" size={20} className="text-gray-400 ml-4" />
-              <TextInput
-                className="flex-1 px-4 py-3 text-gray-700"
-                placeholder="Data de Emissão (YYYY-MM-DD)"
-                value={startDate}
-                onChangeText={setStartDate}
-              />
-            </View>
-          </View>
         </Animated.View>
 
         {loading ? (

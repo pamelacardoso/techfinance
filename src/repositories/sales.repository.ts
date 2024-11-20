@@ -14,6 +14,8 @@ export interface TopProducts {
   valor_minimo?: number;
   valor_maximo?: number;
   percentual_diferenca?: string;
+  total?: string;
+  qtde?: string;
 }
 
 export interface CompanyParticipation {

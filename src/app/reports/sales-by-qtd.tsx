@@ -1,6 +1,7 @@
 import Header from "@/components/header"
 import { SalesQuerySchema, SalesRepository, TopProducts } from "@/repositories/sales.repository"
 import { GeminiService } from "@/services/gemini.service"
+import { convertStringToDecimal } from "@/utils/numbers"
 import { MaterialIcons } from "@expo/vector-icons"
 import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams } from "expo-router"
@@ -72,7 +73,7 @@ export default function SalesByQuantity() {
                     <Text className="text-sm text-gray-500 mt-1">Código: {item.codigo_produto}</Text>
                 </View>
                 <View className="items-end">
-                    <Text className="text-2xl font-bold text-blue-600">{Number(item.quantidade_total).toLocaleString('pt-br')}</Text>
+                    <Text className="text-2xl font-bold text-blue-600">{convertStringToDecimal(item.quantidade_total ?? '0')}</Text>
                     <Text className="text-sm text-blue-500 font-medium">{(Number(item.quantidade_total) / Number(item.total) * 100).toFixed(2)}%</Text>
                 </View>
             </View>
@@ -103,7 +104,7 @@ export default function SalesByQuantity() {
                                 <View>
                                     <Text className="text-sm text-blue-600 font-medium">Qtd. Total Histórico</Text>
                                     <Text className="text-2xl font-bold text-gray-800 mt-1">
-                                        {sales?.length > 0 ? Number(sales[0].total).toLocaleString('pt-br', { style: 'decimal' }) : 'N/A'}
+                                        {sales?.length > 0 ? convertStringToDecimal(sales[0].total ?? '0') : 'N/A'}
                                     </Text>
                                     <Text className="mt-2 text-sm text-blue-600 font-medium">Qtd. Total Top 10</Text>
                                     <Text className="text-2xl font-bold text-gray-800 mt-1">

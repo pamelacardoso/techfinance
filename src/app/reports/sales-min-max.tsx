@@ -1,6 +1,7 @@
 import Header from "@/components/header"
 import { SalesQuerySchema, SalesRepository, TopProducts } from "@/repositories/sales.repository"
 import { GeminiService } from "@/services/gemini.service"
+import { convertStringToCurrency, convertStringToDecimal } from "@/utils/numbers"
 import { MaterialIcons } from "@expo/vector-icons"
 import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams } from "expo-router"
@@ -40,7 +41,7 @@ export default function SalesByMinMax() {
 
   const getInsights = async () => {
     try {
-      const prompt = `Forneça insights sobre as seguintes vendas: Total de Vendas: ${totalSales}, ${sales.map((s) => `Produto: ${s.codigo_produto} ${s.descricao_produto}\nValor Mínimo ${s.valor_minimo}, Valor Máximo ${s.valor_maximo}, Diferença Percentual ${s.percentual_diferenca}\n`).join('\n')}`
+      const prompt = `Forneça insights sobre as seguintes vendas: Total de Vendas: ${totalSales}, ${sales.map((s) => `Produto: ${s.codigo_produto} ${s.descricao_produto}\nValor Mínimo ${s.valor_minimo}, Valor Máximo ${s.valor_maximo}, Diferença Percentual ${s.percentual_diferenca}\n`).join('\n')}. Limite de 260 caracteres.`
       await geminiService.sendMessage(prompt)
       const response = geminiService.messages[geminiService.messages.length - 1].message
       setInsights(response)
@@ -67,16 +68,16 @@ export default function SalesByMinMax() {
           <View className="flex-row justify-between mt-2">
             <View>
               <Text className="text-xs text-gray-500">Mínimo</Text>
-              <Text className="text-sm font-semibold text-green-600">R$ {Number(item.valor_minimo).toFixed(2)}</Text>
+              <Text className="text-sm font-semibold text-green-600">{convertStringToCurrency(item.valor_minimo ?? '0')}</Text>
             </View>
             <View>
               <Text className="text-xs text-gray-500">Máximo</Text>
-              <Text className="text-sm font-semibold text-red-600">R$ {Number(item.valor_maximo).toFixed(2)}</Text>
+              <Text className="text-sm font-semibold text-red-600">{convertStringToCurrency(item.valor_maximo ?? '0')}</Text>
             </View>
           </View>
         </View>
         <View className="items-end">
-          <Text className="text-2xl font-bold text-blue-600">{Number(item.percentual_diferenca).toFixed(2)}%</Text>
+          <Text className="text-2xl font-bold text-blue-600">{convertStringToDecimal(item.percentual_diferenca ?? '0')}%</Text>
           <Text className="text-xs text-blue-500">Variação</Text>
         </View>
       </View>

@@ -1,6 +1,7 @@
 import Header from '@/components/header'
 import { SalesQuerySchema, SalesRepository, TopProducts } from '@/repositories/sales.repository'
 import { GeminiService } from '@/services/gemini.service'
+import { convertStringToCurrency } from '@/utils/numbers'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
@@ -18,17 +19,13 @@ export default function SalesReport() {
   const [loading, setLoading] = useState(false)
   const [totalSales, setTotalSales] = useState(0)
   const [totalValue, setTotalValue] = useState(0)
-  const [startDate, setStartDate] = useState('')
   const [insights, setInsights] = useState('')
 
   useEffect(() => {
     const fetchSales = async () => {
       setLoading(true)
       try {
-        const query: SalesQuerySchema = {
-          dataEmissao: startDate,
-        }
-
+        const query: SalesQuerySchema = {}
         const salesData = await salesRepository.getTopProductsByValue(query)
         setSales(salesData)
 
@@ -51,7 +48,7 @@ export default function SalesReport() {
     }
 
     fetchSales()
-  }, [startDate])
+  }, [])
 
   const getInsights = async () => {
     try {
@@ -74,9 +71,7 @@ export default function SalesReport() {
           <Text className="text-lg font-bold text-gray-800">{item.descricao_produto}</Text>
         </View>
         <View className="bg-blue-50 px-3 py-1 rounded-full">
-          <Text className="text-blue-600 font-medium">{Number(item.valor_total).toLocaleString('pt-BR', {
-    currency: 'BRL'
-})}</Text>
+          <Text className="text-blue-600 font-medium">{convertStringToCurrency(item.valor_total ?? '0')}</Text>
         </View>
       </View>
     </Animated.View>

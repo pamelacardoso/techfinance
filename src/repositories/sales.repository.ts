@@ -11,8 +11,8 @@ export interface TopProducts {
   descricao_produto: string;
   quantidade_total?: string;
   valor_total?: string;
-  valor_minimo?: number;
-  valor_maximo?: number;
+  valor_minimo?: string;
+  valor_maximo?: string;
   percentual_diferenca?: string;
   total?: string;
   qtde?: string;
@@ -20,8 +20,8 @@ export interface TopProducts {
 
 export interface CompanyParticipation {
   nome_fantasia: string;
-  quantidade_total: number;
-  percentual: number;
+  quantidade_total: string;
+  percentual: string;
 }
 
 export class SalesRepository {
@@ -60,6 +60,6 @@ export class SalesRepository {
   async getCompanySalesParticipation(query: SalesQuerySchema): Promise<CompanyParticipation[]> {
     const endpoint = this.endpoints.companyParticipation;
     const response = await api.get(endpoint, { params: query });
-    return response.data;
+    return response.data
   }
 }

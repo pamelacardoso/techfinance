@@ -24,6 +24,12 @@ export interface CompanyParticipation {
   percentual: string;
 }
 
+export interface CompanyParticipationByValue {
+  nome_fantasia: string;
+  valor_total: string;
+  percentual: string;
+}
+
 export class SalesRepository {
   private readonly endpoints = {
     sales: "vendas",
@@ -31,6 +37,7 @@ export class SalesRepository {
     topProductsByValue: "produtos/maior-valor",
     priceVariation: "produtos/variacao-preco",
     companyParticipation: "empresas/participacao",
+    companyParticipationByValue: "empresas/participacao-por-valor",
   };
 
   async getSales(query: SalesQuerySchema): Promise<Sales[]> {
@@ -59,6 +66,12 @@ export class SalesRepository {
 
   async getCompanySalesParticipation(query: SalesQuerySchema): Promise<CompanyParticipation[]> {
     const endpoint = this.endpoints.companyParticipation;
+    const response = await api.get(endpoint, { params: query });
+    return response.data
+  }
+
+  async getCompanySalesParticipationByValue(query: SalesQuerySchema): Promise<CompanyParticipationByValue[]> {
+    const endpoint = this.endpoints.companyParticipationByValue;
     const response = await api.get(endpoint, { params: query });
     return response.data
   }

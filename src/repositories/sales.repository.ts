@@ -14,6 +14,7 @@ export interface TopProducts {
   valor_minimo?: string;
   valor_maximo?: string;
   percentual_diferenca?: string;
+  total_historico?: string;
   total?: string;
   qtde?: string;
 }

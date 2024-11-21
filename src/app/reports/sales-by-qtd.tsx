@@ -114,7 +114,6 @@ export default function SalesByQuantity() {
                                     </Text>
                                 </View>
                             </View>
-
                         </View>
 
                         <TouchableOpacity

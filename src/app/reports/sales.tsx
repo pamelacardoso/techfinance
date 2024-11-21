@@ -1,8 +1,9 @@
 import Header from '@/components/header'
 import { SalesQuerySchema, SalesRepository, TopProducts } from '@/repositories/sales.repository'
 import { GeminiService } from '@/services/gemini.service'
-import { convertStringToCurrency } from '@/utils/numbers'
+import { convertStringToCurrency, convertStringToDecimal } from '@/utils/numbers'
 import { MaterialIcons } from '@expo/vector-icons'
+import { LinearGradient } from 'expo-linear-gradient'
 import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native'
@@ -29,7 +30,7 @@ export default function SalesReport() {
         const salesData = await salesRepository.getTopProductsByValue(query)
         setSales(salesData)
 
-        const totalSalesCount = salesData.length
+        const totalSalesCount = Number(salesData[0]?.qtde) ?? 0;
         let totalSalesValue = 0;
 
         for (const sale of salesData) {
@@ -63,14 +64,21 @@ export default function SalesReport() {
 
   const renderSalesItem = useCallback(({ item, index }: { item: TopProducts; index: number }) => (
     <Animated.View
-      entering={FadeInDown.delay(index * 100)}
-      className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-6 mb-4"
+      entering={FadeInDown.delay(index * 50).springify()}
+      className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-4 mb-3"
     >
-      <View className="flex-row justify-between items-start mb-4">
-        <View className="flex-1">
-          <Text className="text-lg font-bold text-gray-800">{item.descricao_produto}</Text>
+      <LinearGradient
+        colors={['#4F46E5', '#3B82F6']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="absolute top-0 left-0 w-1 h-full rounded-l-2xl"
+      />
+      <View className="flex-row justify-between items-center">
+        <View className="flex-1 pr-4">
+          <Text className="text-lg font-bold text-gray-800" numberOfLines={2}>{item.descricao_produto}</Text>
+          <Text className="text-sm text-gray-500 mt-1">Código: {item.codigo_produto}</Text>
         </View>
-        <View className="bg-blue-50 px-3 py-1 rounded-full">
+        <View className="items-end">
           <Text className="text-blue-600 font-medium">{convertStringToCurrency(item.valor_total ?? '0')}</Text>
         </View>
       </View>
@@ -88,35 +96,42 @@ export default function SalesReport() {
           <Text className="text-2xl font-bold text-gray-800">Top 10 Vendas - Insights em $</Text>
           <Text className="text-gray-500 mt-1">Veja abaixo as vendas realizadas</Text>
 
-          <View className="flex-row justify-between items-center mt-6 bg-blue-50 p-4 rounded-2xl">
-            <View>
-              <Text className="text-sm text-blue-600 font-medium">Total de Vendas</Text>
-              <Text className="text-2xl font-bold text-gray-800 mt-1">{totalSales}</Text>
+            <View className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-4">
+              <Text className="text-lg font-semibold text-gray-700 mb-2">Resumo de Vendas</Text>
+              <View className="flex-row justify-between items-center mt-6 bg-blue-50 p-4 rounded-2xl">
+                <View>
+                  <Text className="text-sm text-blue-600 font-medium">Total de Vendas</Text>
+                  <Text className="text-2xl font-bold text-gray-800 mt-1">{totalSales.toLocaleString('pt-br', { style: 'decimal' })}</Text>
+                </View>
+                <View>
+                  <Text className="text-sm text-blue-600 font-medium">Valor Total Histórico</Text>
+                  <Text className="text-2xl font-bold text-gray-800 mt-1">
+                    {sales?.length > 0 ? convertStringToDecimal(sales[0].total_historico ?? '0') : 'N/A'}
+                  </Text>
+                  <Text className="mt-2 text-sm text-blue-600 font-medium">Valor Total Top 10</Text>
+                  <Text className="text-2xl font-bold text-gray-800 mt-1">
+                    {totalValue.toLocaleString('pt-br', { currency: 'BRL' })}
+                  </Text>
+                </View>
+              </View>
             </View>
-            <View>
-              <Text className="text-sm text-blue-600 font-medium">Valor Total</Text>
-              <Text className="text-2xl font-bold text-gray-800 mt-1">
-                {totalValue.toLocaleString('pt-br', { currency: 'BRL' })}
-              </Text>
-            </View>
-          </View>
 
-          <TouchableOpacity
-            onPress={getInsights}
-            className="bg-blue-600 rounded-xl p-4 mt-4 flex-row items-center justify-center active:bg-blue-700"
-          >
-            <MaterialIcons name="insights" size={20} color="white" />
-            <Text className="text-white font-medium text-base ml-2">Obter Insights do Dinho</Text>
-          </TouchableOpacity>
-
-          {insights ? (
-            <Animated.View
-              entering={FadeInDown}
-              className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200"
+            <TouchableOpacity
+              onPress={getInsights}
+              className="bg-blue-600 rounded-xl p-4 mt-4 flex-row items-center justify-center active:bg-blue-700"
             >
-              <Text className="text-gray-800 leading-relaxed">{insights}</Text>
-            </Animated.View>
-          ) : null}
+              <MaterialIcons name="insights" size={20} color="white" />
+              <Text className="text-white font-medium text-base ml-2">Obter Insights do Dinho</Text>
+            </TouchableOpacity>
+
+            {insights ? (
+              <Animated.View
+                entering={FadeInDown}
+                className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-200"
+              >
+                <Text className="text-gray-800 leading-relaxed">{insights}</Text>
+              </Animated.View>
+            ) : null}
         </Animated.View>
 
         {loading ? (

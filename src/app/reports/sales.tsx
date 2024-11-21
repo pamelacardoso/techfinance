@@ -37,8 +37,6 @@ export default function SalesReport() {
           totalSalesValue += Number(sale.valor_total) ?? 0;
         }
 
-        console.log(totalSalesValue)
-
         setTotalSales(totalSalesCount)
         setTotalValue(totalSalesValue)
       } catch (error) {

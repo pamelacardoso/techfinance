@@ -1,11 +1,11 @@
+import Header from '@/components/header'
 import { Customer } from '@/models/customer'
 import { CustomerRepository } from '@/repositories/customer.repository'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
-
 
 export default function CustomerSearch() {
   const params = useLocalSearchParams()
@@ -14,6 +14,8 @@ export default function CustomerSearch() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Customer[]>([])
   const [loading, setLoading] = useState(false)
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null) // Estado do cliente selecionado
+  const [isModalVisible, setModalVisible] = useState(false) // Controle do modal
 
   const customerRepository = new CustomerRepository()
 
@@ -32,6 +34,16 @@ export default function CustomerSearch() {
   const handleSearch = useCallback(() => {
     searchCustomers(searchQuery)
   }, [searchQuery, searchCustomers])
+
+  const handleCustomerClick = (customer: Customer) => {
+    setSelectedCustomer(customer)
+    setModalVisible(true)
+  }
+
+  const closeModal = () => {
+    setSelectedCustomer(null)
+    setModalVisible(false)
+  }
 
   const renderCustomerItem = useCallback(({ item, index }: { item: Customer; index: number }) => (
     <Animated.View
@@ -52,11 +64,7 @@ export default function CustomerSearch() {
         </View>
         <TouchableOpacity
           className="bg-blue-50 p-2 rounded-full"
-          // Navegação usando expo-router
-          onPress={() => {
-            // Redireciona para a tela de detalhes do cliente
-            window.location.href = `/customer/details?id=${item.id_cliente}`
-          }}
+          onPress={() => handleCustomerClick(item)}
         >
           <MaterialIcons name="chevron-right" size={20} className="text-blue-500" />
         </TouchableOpacity>
@@ -145,6 +153,32 @@ export default function CustomerSearch() {
           }
         />
       </Animated.View>
+
+      {/* Modal */}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeModal}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white rounded-lg p-6 w-4/5">
+            {selectedCustomer && (
+              <>
+                <Text className="text-lg font-bold">{selectedCustomer.razao_cliente}</Text>
+                <Text className="text-gray-600">Código: {selectedCustomer.id_cliente}</Text>
+                <Text className="text-gray-600">Grupo: {selectedCustomer.descricao_grupo}</Text>
+              </>
+            )}
+            <TouchableOpacity
+              className="bg-blue-500 rounded-lg mt-4 p-3"
+              onPress={closeModal}
+            >
+              <Text className="text-white text-center">Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }

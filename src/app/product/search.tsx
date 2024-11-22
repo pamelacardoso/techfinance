@@ -4,7 +4,7 @@ import { ProductRepository } from '@/repositories/product.repository'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 export default function ProductSearch() {
@@ -14,6 +14,8 @@ export default function ProductSearch() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null) // Estado do produto selecionado
+  const [isModalVisible, setModalVisible] = useState(false) // Controle do modal
 
   const productRepository = new ProductRepository()
 
@@ -32,6 +34,16 @@ export default function ProductSearch() {
   const handleSearch = useCallback(() => {
     searchProducts(searchQuery)
   }, [searchQuery, searchProducts])
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product)
+    setModalVisible(true)
+  }
+
+  const closeModal = () => {
+    setSelectedProduct(null)
+    setModalVisible(false)
+  }
 
   const renderProductItem = useCallback(({ item, index }: { item: Product; index: number }) => (
     <Animated.View
@@ -52,7 +64,7 @@ export default function ProductSearch() {
         </View>
         <TouchableOpacity
           className="bg-blue-50 p-2 rounded-full"
-          onPress={() => {/* Implement product details navigation */}}
+          onPress={() => handleProductClick(item)}
         >
           <MaterialIcons name="chevron-right" size={20} className="text-blue-500" />
         </TouchableOpacity>
@@ -147,6 +159,32 @@ export default function ProductSearch() {
           }
         />
       </Animated.View>
+
+      {/* Modal */}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeModal}
+      >
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white rounded-lg p-6 w-4/5">
+            {selectedProduct && (
+              <>
+                <Text className="text-lg font-bold">{selectedProduct.descricao_produto}</Text>
+                <Text className="text-gray-600">Código: {selectedProduct.codigo}</Text>
+                <Text className="text-gray-600">Grupo: {selectedProduct.descricao_grupo}</Text>
+              </>
+            )}
+            <TouchableOpacity
+              className="bg-blue-500 rounded-lg mt-4 p-3"
+              onPress={closeModal}
+            >
+              <Text className="text-white text-center">Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }

@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
+    "start": "expo start -c",
+    "android": "expo start -c --android",
+    "ios": "expo start -c --ios",
+    "web": "expo start -c --web",
     "start:clear": "expo start --clear",
-    "start:tunnel": "expo start --tunnel"
+    "start:tunnel": "expo start -c --tunnel"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.3",

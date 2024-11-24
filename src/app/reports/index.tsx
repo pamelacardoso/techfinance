@@ -30,6 +30,7 @@ export default function ReportsScreen() {
         { title: 'Preço min-max \n    variação', icon: 'auto-graph', onPress: () => router.push('/reports/sales-min-max') },
         { title: 'Participação de Clientes - Qtde.', icon: 'people', onPress: () => router.push('/reports/customers') },
         { title: 'Participação de Clientes - $', icon: 'shopping-bag', onPress: () => router.push('/reports/customers-by-value') },
+        { title: 'Renegociação de Títulos', icon: 'assignment', onPress: () => router.push('/reports/assignments') },
     ];
 
     return (

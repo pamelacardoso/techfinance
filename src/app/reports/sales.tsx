@@ -78,6 +78,7 @@ export default function SalesReport() {
         </View>
         <View className="items-end">
           <Text className="text-blue-600 font-medium">{convertStringToCurrency(item.valor_total ?? '0')}</Text>
+          <Text className="text-sm text-blue-500 font-medium">{(Number(item.valor_total) / Number(item.total_historico) * 100).toFixed(2)}%</Text>
         </View>
       </View>
     </Animated.View>

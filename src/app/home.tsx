@@ -46,6 +46,7 @@ export default function HomeScreen() {
     {
       title: 'Títulos',
       icon: 'assignment',
+      route: '/title',
       description: 'Controle financeiro'
     },
     {

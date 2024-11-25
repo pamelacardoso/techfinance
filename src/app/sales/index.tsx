@@ -54,6 +54,12 @@ export default function SalesScreen() {
         </View>
       </View>
       <View className="space-y-1">
+        {/* ID da Venda */}
+        <View className="flex-row items-center">
+          <MaterialIcons name="tag" size={16} className="text-gray-400 mr-2" />
+          <Text className="text-sm text-gray-600">ID Venda: {item.idVenda}</Text>
+        </View>
+  
         <View className="flex-row items-center">
           <MaterialIcons name="business" size={16} className="text-gray-400 mr-2" />
           <Text className="text-sm text-gray-600">{item.razaoCliente}</Text>
@@ -71,7 +77,7 @@ export default function SalesScreen() {
         </View>
       </View>
     </Animated.View>
-  ), [])
+  ), []);
 
   return (
     <View className="flex-1 bg-gray-50">

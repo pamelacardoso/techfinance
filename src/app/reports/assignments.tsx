@@ -34,6 +34,27 @@ export default function Assignments() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
+  function handleCashFlow(titles: RenegotiatedTitle[]) {
+    const result: Record<string, number> = {};
+
+    for (const title of titles) {
+      const date = new Date(title.renegotiation_date);
+      const monthYear = date.toLocaleDateString('pt-br', {
+        month: '2-digit',
+        year: 'numeric',
+      });
+  
+      const value = parseFloat(title.value.replace('.', '').replace(',', '.'));
+  
+      result[monthYear] = (result[monthYear] || 0) + value;
+    }
+  
+    return Object.entries(result).map(([monthYear, total]) => ({
+      monthYear,
+      total,
+    }));
+  }  
+
   const onReportSubmit = useCallback(async () => {
     setIsLoading(true)
     setError('')
@@ -151,14 +172,19 @@ export default function Assignments() {
 
             <View className="mb-6">
               <Text className="text-xl font-bold text-gray-800 mb-4">Resumo do Fluxo de Caixa</Text>
-              {apiResponse.cash_flow_summary && apiResponse.cash_flow_summary.map((summary, index) => (
+              
+              {handleCashFlow(apiResponse.renegotiated_titles).map((summary, index) => (
                 <View key={index} className="bg-white rounded-lg shadow-sm p-4 mb-3">
-                  <Text className="text-lg font-semibold text-gray-800">{summary.month_year}</Text>
+                  <Text className="text-lg font-semibold text-gray-800">{summary.monthYear}</Text>
                   <Text className="text-base text-blue-600 mt-1">
-                    Total Renegociado: R$ {summary.total_renegotiated}
+                    Total Renegociado: {summary.total.toLocaleString('pt-br', {
+                      currency: 'BRL',
+                      style: 'currency',
+                    })}
                   </Text>
                 </View>
               ))}
+              
             </View>
 
             {apiResponse.notes && (

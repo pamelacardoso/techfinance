@@ -90,7 +90,7 @@ export default function SalesByQuantity() {
                 showsVerticalScrollIndicator={false}
             >
                 <View className="px-4 pt-6 pb-4">
-                    <Text className="text-2xl font-bold text-gray-800">Top 10 Produtos </Text>
+                    <Text className="text-2xl font-bold text-gray-800">Top 10 Produtos em Qtde </Text>
                     <Text className="text-lg text-gray-600 mt-1 font-bold">Mais vendidos em quantidade</Text>
 
                     <View className="mt-6 space-y-4">

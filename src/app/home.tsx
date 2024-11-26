@@ -50,7 +50,7 @@ export default function HomeScreen() {
       description: 'Controle financeiro'
     },
     {
-      title: 'Relatórios',
+      title: 'Relatórios & Insights',
       icon: 'bar-chart',
       description: 'Análise de dados',
       route: '/reports',

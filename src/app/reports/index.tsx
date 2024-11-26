@@ -25,11 +25,11 @@ export default function ReportsScreen() {
     const username = params.usuario || 'User';
 
     const reports = [
-        { title: 'Top 10 Vendas \n Insights em $', icon: 'bar-chart', onPress: () => router.push('/reports/sales') },
-        { title: 'Top 10 Vendas \n Insights em Qtd.', icon: 'bar-chart', onPress: () => router.push('/reports/sales-by-qtd') },
-        { title: 'Preço min-max \n    variação', icon: 'auto-graph', onPress: () => router.push('/reports/sales-min-max') },
-        { title: 'Participação de Clientes - Qtde.', icon: 'people', onPress: () => router.push('/reports/customers') },
-        { title: 'Participação de Clientes - $', icon: 'shopping-bag', onPress: () => router.push('/reports/customers-by-value') },
+        { title: 'Top 10 Produtos \nem $', icon: 'bar-chart', onPress: () => router.push('/reports/sales') },
+        { title: 'Top 10 Produtos \nem Qtde.', icon: 'bar-chart', onPress: () => router.push('/reports/sales-by-qtd') },        
+        { title: 'Top 10 Clientes \nem $', icon: 'people', onPress: () => router.push('/reports/customers-by-value') },
+        { title: 'Top 10 Clientes \nem Qtde.', icon: 'people', onPress: () => router.push('/reports/customers') },
+        { title: 'Variação preços \n min-max', icon: 'auto-graph', onPress: () => router.push('/reports/sales-min-max') },
         { title: 'Renegociação de Títulos', icon: 'assignment', onPress: () => router.push('/reports/assignments') },
     ];
 
@@ -38,7 +38,7 @@ export default function ReportsScreen() {
             <Header username={username} />
             <View className="flex-1 px-2">
                 <View className="p-4">
-                    <Text className="text-2xl font-bold text-gray-800">Relatórios</Text>
+                    <Text className="text-2xl font-bold text-gray-800">Relatórios, Insights & IA</Text>
                     <Text className="text-gray-500 mt-1">Escolha um relatório para visualizar</Text>
                 </View>
                 <FlatList

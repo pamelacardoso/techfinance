@@ -82,7 +82,7 @@ function CustomerValueReport() {
         showsVerticalScrollIndicator={false}
       >
         <View className="px-4 pt-6 pb-4">
-          <Text className="text-3xl font-bold text-gray-800">Participação de Clientes - $</Text>
+          <Text className="text-3xl font-bold text-gray-800">Top 10 Clientes em $</Text>
           {/* <Text className="text-lg text-gray-600 mt-1">Participação das empresas nas vendas</Text> */}
 
           <View className="mt-6 space-y-4">

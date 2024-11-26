@@ -92,7 +92,7 @@ export default function SalesReport() {
           entering={FadeIn}
           className="px-4 pt-4 pb-2 bg-white shadow-sm"
         >
-          <Text className="text-2xl font-bold text-gray-800">Top 10 Vendas - Insights em $</Text>
+          <Text className="text-2xl font-bold text-gray-800">Top 10 Produtos em $</Text>
           <Text className="text-gray-500 mt-1">Veja abaixo as vendas realizadas</Text>
 
             <View className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-4">

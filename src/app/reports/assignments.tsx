@@ -38,7 +38,7 @@ export default function Assignments() {
     const result: Record<string, number> = {};
 
     for (const title of titles) {
-      const date = new Date(title.renegotiation_date);
+      const date = new Date(title.new_due_date);
       const monthYear = date.toLocaleDateString('pt-br', {
         month: '2-digit',
         year: 'numeric',
@@ -116,7 +116,7 @@ export default function Assignments() {
         <View className="py-6">
           <Text className="text-3xl font-bold text-gray-800">Renegociação de Títulos</Text>
           <Text className="text-lg text-gray-600 mt-2">
-            Visualize e gerencie todas as suas renegociações.
+            Visualize e simule renegociações.
           </Text>
         </View>
 

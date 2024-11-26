@@ -24,6 +24,8 @@ interface ApiResponse {
   resumoTitulos: ResumoFinanceiro;
 }
 
+const customerRepository = new CustomerRepository();  // Instanciando o repositório
+
 export default function TituloScreen() {
   const params = useLocalSearchParams();
   const username = params.usuario || 'Admin';
@@ -32,8 +34,6 @@ export default function TituloScreen() {
   const [resumoTitulos, setResumoTitulos] = useState<ResumoFinanceiro | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  
-  const customerRepository = new CustomerRepository();  // Instanciando o repositório
 
   // Função para buscar os dados
   const fetchResumo = useCallback(async () => {
@@ -42,6 +42,8 @@ export default function TituloScreen() {
     
     try {
       const response = await customerRepository.fetchResumo();
+
+      console.log(response)
       
       if (response) {
         setClientesVencidos(response.clientesVencidos || []);
@@ -54,12 +56,11 @@ export default function TituloScreen() {
     } finally {
       setIsLoading(false);
     }
-  }, [customerRepository]);
+  }, []);
 
-  // UseEffect para buscar os dados quando a tela for carregada
   useEffect(() => {
     fetchResumo();
-  }, [fetchResumo]);
+  }, []);
 
   // Função para renderizar cada item da lista de clientes vencidos
   const renderClienteVencido = ({ item, index }: { item: ResumoTitulo; index: number }) => (

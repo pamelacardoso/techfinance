@@ -16,7 +16,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         backgroundColor: "#ffffff"
     },
     ios: {
-        supportsTablet: true
+        supportsTablet: true,
+        bundleIdentifier: "com.techfinance.app"
     },
     android: {
         adaptiveIcon: {
@@ -36,7 +37,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         supabaseUrl: process.env.SUPABASE_URL,
         supabaseKey: process.env.SUPABASE_ANON_KEY,
         eas: {
-            projectId: "75829ac2-4df1-434b-9dc4-ebc567d09ea5",
+            projectId: "b482baa0-eb1e-4501-a7b0-9878a9beb8fa",
         }
     },
 });

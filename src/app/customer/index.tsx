@@ -1,9 +1,8 @@
-import { useEffect, useCallback, useState } from 'react'
-import Header from '@/components/header'
 import { Customer } from '@/models/customer'
 import { CustomerRepository } from '@/repositories/customer.repository'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
+import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 

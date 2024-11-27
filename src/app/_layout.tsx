@@ -17,7 +17,7 @@ export default function Layout() {
             headerStyle: { backgroundColor: '#000' }, headerTintColor: 'white'
           }} />
           <Stack.Screen name="product/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
-          <Stack.Screen name="product/search" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
+          <Stack.Screen name="product/productdetails" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="customer/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="customer/search" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="sales/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />

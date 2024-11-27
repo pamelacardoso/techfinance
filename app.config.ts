@@ -22,7 +22,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         adaptiveIcon: {
             foregroundImage: "./assets/adaptive-icon.png",
             backgroundColor: "#ffffff"
-        }
+        },
+        package: "br.com.techfinance.app"
     },
     web: {
         favicon: "./assets/favicon.png"
@@ -33,6 +34,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     extra: {
         geminiApiKey: process.env.GEMINI_API_KEY,
         supabaseUrl: process.env.SUPABASE_URL,
-        supabaseKey: process.env.SUPABASE_ANON_KEY
+        supabaseKey: process.env.SUPABASE_ANON_KEY,
+        eas: {
+            projectId: "75829ac2-4df1-434b-9dc4-ebc567d09ea5",
+        }
     },
 });

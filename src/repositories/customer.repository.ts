@@ -1,34 +1,27 @@
 import { api } from "@/lib/api";
-import { Customer } from "@/models/customer"; // A interface correta de Customer
 
-interface ResumoTitulo {
-  nome_fantasia: string;
-  data_vencimento: string;
-  dias_vencidos: number;
-}
-
-interface ResumoFinanceiro {
-  total_recebido: string;
-  saldo: string;
-  parcelas: string[];
+export interface ResumoAtraso {
+  atraso_30_60: string;
+  atraso_ate_30: string;
+  outro: string;
+  vence_ate_30: string;
+  vencimento_hoje: string;
+  vencimento_superior_30: string;
 }
 
 export class CustomerRepository {
   private readonly endpointClientes = 'clientes';
-  private readonly endpointResumo = '/contas_receber/resumo';  // Novo endpoint para buscar os resumos
+  private readonly endpointResumo = '/contas_receber/resumo';
 
-  // Método para buscar dados dos clientes
+
   async search(query: any): Promise<any[]> {
     const response = await api.get(this.endpointClientes, { params: query });
     return response.data;
   }
 
-  // Novo método para buscar o resumo dos títulos e financeiros
-  async fetchResumo(): Promise<{
-    clientesVencidos: ResumoTitulo[];
-    resumoTitulos: ResumoFinanceiro;
-  }> {
-    const response = await api.get(this.endpointResumo);  // Chama o endpoint correto para buscar os dados
-    return response.data;  // Retorna os dados no formato esperado
+
+  async fetchResumo(): Promise<ResumoAtraso> {
+    const response = await api.get(this.endpointResumo);
+    return response.data;
   }
 }

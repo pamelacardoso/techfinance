@@ -7,6 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     scheme: "techfinance",
     version: "1.0.0",
     orientation: "portrait",
+    owner: "techfinance",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,

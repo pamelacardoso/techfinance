@@ -1,3 +1,4 @@
+import Header from '@/components/header'
 import { Customer } from '@/models/customer'
 import { CustomerRepository } from '@/repositories/customer.repository'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -79,6 +80,7 @@ export default function CustomerSearch() {
 
   return (
     <View className="flex-1 bg-gray-50">
+      <Header username={username} />
       <Animated.View entering={FadeIn} className="flex-1">
         <FlatList
           data={searchResults}

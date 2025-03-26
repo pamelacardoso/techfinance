@@ -1,4 +1,5 @@
 import Header from '@/components/header'
+import { useAuth } from '@/hooks/useAuth'
 import { MaterialIcons } from '@expo/vector-icons'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useCallback } from 'react'
@@ -21,8 +22,9 @@ interface GridItemProps {
 }
 
 export default function HomeScreen() {
+  const user = useAuth((state) => state.user)
+  const username = user?.name || 'User'
   const params = useLocalSearchParams()
-  const username = params.usuario || 'User'
 
   const menuItems: MenuItem[] = [
     {

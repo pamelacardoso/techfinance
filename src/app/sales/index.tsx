@@ -3,7 +3,7 @@ import { Sales } from '@/models/sales'
 import { SalesRepository } from '@/repositories/sales.repository'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
@@ -35,8 +35,8 @@ export default function SalesScreen() {
 
   const filteredSales = sales.filter(
     (sale) =>
-      sale.descricaoProduto.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sale.nomeFantasia.toLowerCase().includes(searchQuery.toLowerCase())
+      sale.descricaoProduto?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sale.nomeFantasia?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const renderSaleItem = useCallback(({ item, index }: { item: Sales; index: number }) => (
@@ -59,7 +59,7 @@ export default function SalesScreen() {
           <MaterialIcons name="tag" size={16} className="text-gray-400 mr-2" />
           <Text className="text-sm text-gray-600">ID Venda: {item.idVenda}</Text>
         </View>
-  
+
         <View className="flex-row items-center">
           <MaterialIcons name="business" size={16} className="text-gray-400 mr-2" />
           <Text className="text-sm text-gray-600">{item.razaoCliente}</Text>
@@ -81,7 +81,7 @@ export default function SalesScreen() {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <Header username={username} />
+      <Header username={username?.toString()} />
       <Animated.View
         entering={FadeIn}
         className="flex-1 px-4"

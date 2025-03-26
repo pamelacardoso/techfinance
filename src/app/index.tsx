@@ -1,3 +1,4 @@
+import { useAuth } from '@/hooks/useAuth';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
@@ -13,9 +14,11 @@ import {
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const login = useAuth((state) => state.login);
 
-  const handleLogin = () => {
-    if (email === 'admin' && password === 'admin') {
+  const handleLogin = async () => {
+    const success = await login(email, password);
+    if (success) {
       router.replace('/home');
     } else {
       Alert.alert('Erro', 'Login e/ou senha inválidos');

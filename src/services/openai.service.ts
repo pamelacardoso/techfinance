@@ -31,7 +31,7 @@ export class OpenAIService {
                     Authorization: `Bearer ${this.apiKey}`,
                 },
                 body: JSON.stringify({
-                    model: 'gpt-4o', // Ou 'gpt-4-turbo' conforme necessidade
+                    model: 'gpt-4o-mini',
                     messages: messagesPayload,
                 }),
             });

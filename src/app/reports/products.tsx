@@ -1,8 +1,8 @@
 import { SalesRepository } from '@/repositories/sales.repository';
-import { GeminiService } from '@/services/gemini.service';
+import { OpenAIService } from '@/services/openai.service';
 
 const salesRepository = new SalesRepository();
-const geminiService = new GeminiService();
+const openAiService = new OpenAIService();
 
 export default function ProductReport() {
 

@@ -34,7 +34,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         "expo-router"
     ],
     extra: {
-        geminiApiKey: process.env.GEMINI_API_KEY,
+        openAiKey: process.env.OPENAI_API_KEY,
         eas: {
             projectId: "b482baa0-eb1e-4501-a7b0-9878a9beb8fa",
         }

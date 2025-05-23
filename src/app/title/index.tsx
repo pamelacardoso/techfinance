@@ -1,6 +1,6 @@
 import Header from '@/components/header'
 import { CustomerRepository, ResumoAtraso } from '@/repositories/customer.repository'
-import { GeminiService } from '@/services/gemini.service'
+import { OpenAIService } from '@/services/openai.service'
 import { MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -9,7 +9,7 @@ import Markdown from 'react-native-markdown-display'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 const customerRepository = new CustomerRepository()
-const geminiService = new GeminiService()
+const openAiService = new OpenAIService()
 
 export default function TitlePage() {
   const [resumo, setResumo] = useState<ResumoAtraso | null>(null)
@@ -39,8 +39,8 @@ export default function TitlePage() {
 
     try {
       const prompt = `Forneça insights sobre os seguintes dados de títulos: ${Object.entries(resumo).map(([title, value]) => `${title}: ${value}`).join(', ')}. Limite a resposta a 260 caracteres.`
-      await geminiService.sendMessage(prompt)
-      const response = geminiService.messages[geminiService.messages.length - 1]?.message || 'Sem insights disponíveis.'
+      await openAiService.sendMessage(prompt)
+      const response = openAiService.messages[openAiService.messages.length - 1]?.message || 'Sem insights disponíveis.'
       setInsights(response)
     } catch (error) {
       console.error('Erro ao obter insights:', error)

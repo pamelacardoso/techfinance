@@ -1,4 +1,5 @@
-import { GeminiService, MessageModel, WhoEnum } from '@/services/gemini.service';
+import { OpenAIService } from '@/services/openai.service';
+import { MessageModel, WhoEnum } from '@/types/message';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useRef, useState } from 'react';
@@ -14,35 +15,35 @@ import {
 } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
 
-export default function GeminiScreen() {
+export default function OpenAIScreen() {
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  const geminiServiceRef = useRef<GeminiService | null>(null);
+  const aiServiceRef = useRef<OpenAIService | null>(null);
 
   useEffect(() => {
-    geminiServiceRef.current = new GeminiService();
+    aiServiceRef.current = new OpenAIService();
     sendInitialMessage();
   }, []);
 
   const sendInitialMessage = async () => {
-    if (geminiServiceRef.current) {
+    if (aiServiceRef.current) {
       setIsLoading(true);
-      await geminiServiceRef.current.sendMessage(
+      await aiServiceRef.current.sendMessage(
         "Olá! Eu sou o Dinho Bot, seu assistente virtual. Como posso ajudar você hoje?",
         false
       );
-      setMessages([...geminiServiceRef.current.messages]);
+      setMessages([...aiServiceRef.current.messages]);
       setIsLoading(false);
     }
   };
 
   const onSendMessage = async () => {
-    if (inputText.trim() && geminiServiceRef.current) {
+    if (inputText.trim() && aiServiceRef.current) {
       setIsLoading(true);
-      await geminiServiceRef.current.sendMessage(inputText.trim());
-      setMessages([...geminiServiceRef.current.messages]);
+      await aiServiceRef.current.sendMessage(inputText.trim());
+      setMessages([...aiServiceRef.current.messages]);
       setInputText('');
       setIsLoading(false);
     }
@@ -56,13 +57,13 @@ export default function GeminiScreen() {
         quality: 1,
       });
 
-      if (!result.canceled && result.assets[0] && geminiServiceRef.current) {
+      if (!result.canceled && result.assets[0] && aiServiceRef.current) {
         setIsLoading(true);
-        await geminiServiceRef.current.sendImageMessage(
+        await aiServiceRef.current.sendImageMessage(
           inputText.trim() || 'Analise da imagem',
           result.assets[0].uri
         );
-        setMessages([...geminiServiceRef.current.messages]);
+        setMessages([...aiServiceRef.current.messages]);
         setInputText('');
         setIsLoading(false);
       }

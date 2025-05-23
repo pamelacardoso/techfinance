@@ -1,9 +1,10 @@
-import { GeminiService, WhoEnum } from '@/services/gemini.service';
+import { OpenAIService } from '@/services/openai.service';
+import { WhoEnum } from '@/types/message';
 import { useConnection } from './useConnection';
 
-export function useGemini() {
+export function useOpenAI() {
     const { isOnline, setOnline, setLastSync } = useConnection();
-    const geminiService = new GeminiService();
+    const openaiService = new OpenAIService();
 
     const generateWithCache = async (
         prompt: string,
@@ -11,26 +12,27 @@ export function useGemini() {
     ): Promise<void> => {
         try {
             if (imageUri) {
-                await geminiService.sendImageMessage(prompt, imageUri);
+                await openaiService.sendImageMessage(prompt, imageUri);
             } else {
-                await geminiService.sendMessage(prompt);
+                await openaiService.sendMessage(prompt);
             }
 
             setOnline(true);
             setLastSync(new Date().toISOString());
         } catch (error) {
+            console.error(error);
             setOnline(false);
 
-            geminiService.messages.push({
-                message: "Desculpe, estou temporariamente offline. Por favor, tente novamente mais tarde.",
-                who: WhoEnum.bot
+            openaiService.messages.push({
+                message: 'Desculpe, estou temporariamente offline. Por favor, tente novamente mais tarde.',
+                who: WhoEnum.bot,
             });
         }
     };
 
     return {
         generateWithCache,
-        messages: geminiService.messages,
+        messages: openaiService.messages,
         isOnline,
         lastSync: useConnection((state) => state.lastSync),
     };

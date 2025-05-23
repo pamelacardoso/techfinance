@@ -1,6 +1,6 @@
 import Header from '@/components/header'
 import { CompanyParticipation, SalesRepository } from '@/repositories/sales.repository'
-import { GeminiService } from '@/services/gemini.service'
+import { OpenAIService } from '@/services/openai.service'
 import { convertStringToDecimal } from '@/utils/numbers'
 import { MaterialIcons } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -10,11 +10,11 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 const salesRepository = new SalesRepository()
-const geminiService = new GeminiService()
+const openAiService = new OpenAIService()
 
 export default function CustomerReports() {
   const params = useLocalSearchParams()
-  const username = params.usuario || 'Admin'
+  const username = 'Admin'
 
   const [companyParticipation, setCompanyParticipation] = useState<CompanyParticipation[]>([])
   const [loading, setLoading] = useState(false)
@@ -39,8 +39,8 @@ export default function CustomerReports() {
   const getInsights = useCallback(async () => {
     try {
       const prompt = `Forneça insights sobre a participação das seguintes empresas nas vendas: ${companyParticipation.map(company => `${company.nome_fantasia}: ${Number(company.percentual)?.toFixed(2) ?? 0}%`).join(', ')}. Limite a resposta a 260 caracteres.`
-      await geminiService.sendMessage(prompt)
-      const response = geminiService.messages[geminiService.messages.length - 1]?.message || 'Sem insights disponíveis.'
+      await openAiService.sendMessage(prompt)
+      const response = openAiService.messages[openAiService.messages.length - 1]?.message || 'Sem insights disponíveis.'
       setInsights(response)
     } catch (error) {
       console.error('Erro ao obter insights:', error)

@@ -1,6 +1,6 @@
 import Header from "@/components/header"
 import { SalesQuerySchema, SalesRepository, TopProducts } from "@/repositories/sales.repository"
-import { GeminiService } from "@/services/gemini.service"
+import { OpenAIService } from "@/services/openai.service"
 import { convertStringToCurrency, convertStringToDecimal } from "@/utils/numbers"
 import { MaterialIcons } from "@expo/vector-icons"
 import { LinearGradient } from 'expo-linear-gradient'
@@ -10,11 +10,11 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 const salesRepository = new SalesRepository()
-const geminiService = new GeminiService()
+const openAiService = new OpenAIService()
 
 export default function SalesByMinMax() {
   const params = useLocalSearchParams()
-  const username = params.usuario || 'Admin'
+  const username = 'Admin'
 
   const [sales, setSales] = useState<TopProducts[]>([])
   const [loading, setLoading] = useState(false)
@@ -42,11 +42,11 @@ export default function SalesByMinMax() {
   const getInsights = async () => {
     try {
       const prompt = `Forneça insights sobre as seguintes vendas: Total de Vendas: ${totalSales}, ${sales.map((s) => `Produto: ${s.codigo_produto} ${s.descricao_produto}\nValor Mínimo ${s.valor_minimo}, Valor Máximo ${s.valor_maximo}, Diferença Percentual ${s.percentual_diferenca}\n`).join('\n')}. Limite de 260 caracteres.`
-      await geminiService.sendMessage(prompt)
-      const response = geminiService.messages[geminiService.messages.length - 1].message
+      await openAiService.sendMessage(prompt)
+      const response = openAiService.messages[openAiService.messages.length - 1].message
       setInsights(response)
     } catch (error) {
-      console.error('Erro ao obter insights do Gemini:', error)
+      console.error('Erro ao obter insights do Dino:', error)
     }
   }
 

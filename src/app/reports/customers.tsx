@@ -51,7 +51,7 @@ export default function CustomerReports() {
   const renderCompanyItem = useCallback(({ item, index }: { item: CompanyParticipation; index: number }) => (
     <Animated.View
       entering={FadeInDown.delay(index * 50).springify()}
-      className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-4 mb-3"
+      className="bg-white rounded-2xl shadow-lg p-4 mb-3"
     >
       <LinearGradient
         colors={['#4F46E5', '#3B82F6']}

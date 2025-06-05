@@ -44,31 +44,47 @@ export default function Header({ username }: Readonly<HeaderProps>) {
   }
 
   return (
-    <View className="bg-gray-200 p-4 flex-row items-center justify-between">
-      <View className="flex-row items-center">
+    <View className="bg-gray-200 p-3 sm:p-4 lg:p-6 flex-row items-center justify-between">
+      <View className="flex-row items-center flex-1">
         {navigation.canGoBack() && (
-          <TouchableOpacity onPress={navigation.goBack} className="mr-4">
-            <MaterialIcons name="arrow-back" size={24} color="gray" />
+          <TouchableOpacity
+            onPress={navigation.goBack}
+            className="mr-2 sm:mr-4 p-1 sm:p-2 rounded-full active:bg-gray-300"
+            accessibilityLabel="Voltar"
+          >
+            <MaterialIcons name="arrow-back" size={20} color="gray" className="sm:text-2xl" />
           </TouchableOpacity>
         )}
 
-        <TouchableOpacity onPress={pickImage}>
-          <View className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden justify-center items-center">
+        <TouchableOpacity
+          onPress={pickImage}
+          className="mr-3 sm:mr-4"
+          accessibilityLabel="Alterar foto de perfil"
+        >
+          <View className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full bg-gray-300 overflow-hidden justify-center items-center">
             {imageUri ? (
               <Image
                 source={{ uri: imageUri }}
                 className="w-full h-full"
+                resizeMode="cover"
               />
             ) : (
-              <MaterialIcons name="person" size={20} color="gray" />
+              <MaterialIcons name="person" size={16} color="gray" className="sm:text-xl lg:text-2xl" />
             )}
           </View>
         </TouchableOpacity>
-        <Text className="text-xl ml-5">{username}</Text>
+
+        <Text className="text-base sm:text-lg lg:text-xl font-medium text-gray-800 flex-1" numberOfLines={1}>
+          {username}
+        </Text>
       </View>
 
-      <TouchableOpacity onPress={handleLogout}>
-        <MaterialIcons name="logout" size={24} color="gray" />
+      <TouchableOpacity
+        onPress={handleLogout}
+        className="p-1 sm:p-2 rounded-full active:bg-gray-300"
+        accessibilityLabel="Sair"
+      >
+        <MaterialIcons name="logout" size={20} color="gray" className="sm:text-2xl" />
       </TouchableOpacity>
     </View>
   );

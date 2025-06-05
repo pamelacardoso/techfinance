@@ -9,7 +9,7 @@ import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 export default function ProductSearch() {
   const params = useLocalSearchParams()
-  const username = params.usuario || 'User'
+  const username = Array.isArray(params.usuario) ? params.usuario[0] : params.usuario || 'User'
 
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Product[]>([])
@@ -53,25 +53,32 @@ export default function ProductSearch() {
   const renderProductItem = useCallback(({ item, index }: { item: Product; index: number }) => (
     <Animated.View
       entering={FadeInDown.delay(index * 100)}
-      className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-4 mb-3"
+      className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 mb-3 mx-1"
     >
       <View className="flex-row justify-between items-start">
-        <View className="flex-1">
-          <Text className="text-lg font-bold text-gray-800">{item.descricao_produto}</Text>
-          <View className="flex-row items-center mt-2">
-            <MaterialIcons name="qr-code" size={16} className="text-gray-400" />
-            <Text className="text-sm text-gray-600 ml-1">Código: {item.codigo}</Text>
-          </View>
-          <View className="flex-row items-center mt-1">
-            <MaterialIcons name="category" size={16} className="text-gray-400" />
-            <Text className="text-sm text-gray-600 ml-1">Grupo: {item.descricao_grupo}</Text>
+        <View className="flex-1 mr-3">
+          <Text className="text-base sm:text-lg lg:text-xl font-bold text-gray-800" numberOfLines={2}>
+            {item.descricao_produto}
+          </Text>
+          <View className="flex-row items-center mt-2 flex-wrap">
+            <View className="flex-row items-center mr-4 mb-1">
+              <MaterialIcons name="qr-code" size={14} color="#6B7280" className="sm:text-base" />
+              <Text className="text-xs sm:text-sm text-gray-600 ml-1">Código: {item.codigo}</Text>
+            </View>
+            <View className="flex-row items-center mb-1">
+              <MaterialIcons name="category" size={14} color="#6B7280" className="sm:text-base" />
+              <Text className="text-xs sm:text-sm text-gray-600 ml-1" numberOfLines={1}>
+                Grupo: {item.descricao_grupo}
+              </Text>
+            </View>
           </View>
         </View>
         <TouchableOpacity
-          className="bg-blue-50 p-2 rounded-full"
+          className="bg-blue-50 p-2 sm:p-3 rounded-full active:bg-blue-100"
           onPress={() => handleProductClick(item)}
+          accessibilityLabel="Ver detalhes do produto"
         >
-          <MaterialIcons name="chevron-right" size={20} className="text-blue-500" />
+          <MaterialIcons name="chevron-right" size={18} color="#3B82F6" className="sm:text-xl" />
         </TouchableOpacity>
       </View>
     </Animated.View>
@@ -89,24 +96,25 @@ export default function ProductSearch() {
           renderItem={renderProductItem}
           keyExtractor={(item) => item.codigo}
           contentContainerStyle={{
-            paddingHorizontal: 16,
+            paddingHorizontal: 12,
             paddingTop: 16,
             paddingBottom: 20
           }}
+          showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            <View className="space-y-4 mb-6">
-              <View>
-                <Text className="text-2xl font-bold text-gray-800">Buscar Produtos</Text>
-                <Text className="text-gray-500 my-2">
-                  Digite o nome ou código do produto para começar
-                </Text>
-              </View>
+            <View className="space-y-3 sm:space-y-4 lg:space-y-6 mb-4 sm:mb-6 px-1">
+              <Text className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">
+                Buscar Produtos
+              </Text>
+              <Text className="text-gray-500 text-sm sm:text-base">
+                Digite o nome ou código do produto para começar
+              </Text>
 
-              <View className="flex-row items-center bg-white rounded-2xl shadow-sm border border-gray-100">
+              <View className="flex-row items-center bg-white rounded-xl sm:rounded-2xl border border-gray-100">
                 <View className="flex-1 flex-row items-center">
-                  <MaterialIcons name="search" size={20} className="text-gray-400 ml-4" />
+                  <MaterialIcons name="search" size={18} color="#9CA3AF" className="ml-3 sm:ml-4 sm:text-xl" />
                   <TextInput
-                    className="flex-1 py-3 px-3 text-gray-700"
+                    className="flex-1 py-3 sm:py-4 px-2 sm:px-3 text-sm sm:text-base text-gray-700"
                     placeholder="Digite o nome ou código do produto"
                     placeholderTextColor="#9CA3AF"
                     value={searchQuery}
@@ -119,36 +127,36 @@ export default function ProductSearch() {
                 {searchQuery.length > 0 && (
                   <TouchableOpacity
                     onPress={() => setSearchQuery('')}
-                    className="p-2 mr-1"
+                    className="p-2 sm:p-3 mr-1"
                     accessibilityLabel="Limpar busca"
                   >
-                    <MaterialIcons name="close" size={20} className="text-gray-400" />
+                    <MaterialIcons name="close" size={18} color="#9CA3AF" className="sm:text-xl" />
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity
                   onPress={handleSearch}
-                  className="bg-blue-500 rounded-xl p-3 m-1 active:bg-blue-600"
+                  className="bg-blue-500 rounded-xl sm:rounded-2xl p-2.5 sm:p-3 m-1 active:bg-blue-600"
                   accessibilityLabel="Botão de busca"
                 >
-                  <MaterialIcons name="search" size={20} color="white" />
+                  <MaterialIcons name="search" size={18} color="white" className="sm:text-xl" />
                 </TouchableOpacity>
               </View>
             </View>
           }
           ListEmptyComponent={
-            <View className="flex-1 items-center justify-center py-12">
+            <View className="flex-1 items-center justify-center py-8 sm:py-12 px-4">
               {loading ? (
                 <>
-                  <ActivityIndicator size="large" className="text-blue-500" />
-                  <Text className="text-gray-500 mt-4">Buscando produtos...</Text>
+                  <ActivityIndicator size="large" color="#3B82F6" />
+                  <Text className="text-gray-500 mt-4 text-sm sm:text-base">Buscando produtos...</Text>
                 </>
               ) : (
                 <>
-                  <MaterialIcons name="search-off" size={48} className="text-gray-300 mb-4" />
-                  <Text className="text-gray-500 text-center">
+                  <MaterialIcons name="search-off" size={40} color="#D1D5DB" className="sm:text-5xl mb-4" />
+                  <Text className="text-gray-500 text-center text-sm sm:text-base">
                     Nenhum produto encontrado
                   </Text>
-                  <Text className="text-gray-400 text-center mt-1">
+                  <Text className="text-gray-400 text-center mt-1 text-xs sm:text-sm">
                     Tente uma nova busca
                   </Text>
                 </>
@@ -165,20 +173,37 @@ export default function ProductSearch() {
         transparent={true}
         onRequestClose={closeModal}
       >
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="bg-white rounded-lg p-6 w-4/5">
+        <View className="flex-1 justify-center items-center bg-black/50 p-4">
+          <View className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-md sm:max-w-lg">
             {selectedProduct && (
               <>
-                <Text className="text-lg font-bold">{selectedProduct.descricao_produto}</Text>
-                <Text className="text-gray-600">Código: {selectedProduct.codigo}</Text>
-                <Text className="text-gray-600">Grupo: {selectedProduct.descricao_grupo}</Text>
+                <View className="mb-4 sm:mb-6">
+                  <Text className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-2">
+                    {selectedProduct.descricao_produto}
+                  </Text>
+                  <View className="space-y-2">
+                    <View className="flex-row items-center">
+                      <MaterialIcons name="qr-code" size={16} color="#6B7280" className="sm:text-lg mr-2" />
+                      <Text className="text-sm sm:text-base text-gray-600">
+                        Código: {selectedProduct.codigo}
+                      </Text>
+                    </View>
+                    <View className="flex-row items-center">
+                      <MaterialIcons name="category" size={16} color="#6B7280" className="sm:text-lg mr-2" />
+                      <Text className="text-sm sm:text-base text-gray-600">
+                        Grupo: {selectedProduct.descricao_grupo}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
               </>
             )}
             <TouchableOpacity
-              className="bg-blue-500 rounded-lg mt-4 p-3"
+              className="bg-blue-500 rounded-lg sm:rounded-xl mt-2 p-3 sm:p-4 active:bg-blue-600"
               onPress={closeModal}
+              accessibilityLabel="Fechar detalhes"
             >
-              <Text className="text-white text-center">Fechar</Text>
+              <Text className="text-white text-center text-sm sm:text-base font-medium">Fechar</Text>
             </TouchableOpacity>
           </View>
         </View>

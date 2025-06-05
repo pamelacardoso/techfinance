@@ -37,7 +37,6 @@ export default function Layout() {
           <Stack.Screen name="product/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="product/productdetails" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="customer/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
-          <Stack.Screen name="customer/search" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="sales/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="reports/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="reports/sales" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />

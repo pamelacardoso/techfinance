@@ -1,12 +1,13 @@
 import { api } from "@/lib/api";
 
 export interface ResumoAtraso {
-  atraso_30_60: string;
-  atraso_ate_30: string;
-  outro: string;
-  vence_ate_30: string;
-  vencimento_hoje: string;
-  vencimento_superior_30: string;
+  atraso_30_60: number;
+  atraso_ate_30: number;
+  outro: number;
+  vence_ate_30: number;
+  vencimento_hoje: number;
+  vencimento_superior_30: number;
+  total: number;
 }
 
 export class CustomerRepository {
@@ -22,6 +23,16 @@ export class CustomerRepository {
 
   async fetchResumo(): Promise<ResumoAtraso> {
     const response = await api.get(this.endpointResumo);
-    return response.data;
+    let { data } = response;
+    let total = 0;
+
+    for (const key of Object.keys(data)) {
+      data[key] = Number(data[key]);
+      total += data[key];
+    }
+
+    data['total'] = total;
+
+    return data;
   }
 }

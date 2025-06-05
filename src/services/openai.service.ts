@@ -60,7 +60,7 @@ export class OpenAIService {
             if (!base64Image) throw new Error('Failed to convert image.');
 
             const payload = {
-                model: 'gpt-4o',
+                model: 'gpt-4o-mini',
                 messages: [
                     {
                         role: 'user',

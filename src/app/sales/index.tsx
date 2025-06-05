@@ -20,7 +20,7 @@ export default function SalesScreen() {
   const loadSales = useCallback(async () => {
     try {
       setLoading(true)
-      const salesData = await salesRepository.getSales({})
+      const salesData = await salesRepository.getSales({ limite: 100 })
       setSales(salesData)
     } catch (error) {
       console.error('Erro ao buscar dados:', error)

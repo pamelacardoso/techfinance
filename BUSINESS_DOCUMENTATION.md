@@ -425,20 +425,6 @@ O **TechFinance App** é uma solução mobile de Business Intelligence (BI) dese
 - **Melhoria de 20%** na tomada de decisão
 - **Economia de 40%** em tempo de relatórios
 
-## Suporte e Treinamento
-
-### Treinamento Inicial
-- **Workshop de Implementação**: 4 horas
-- **Capacitação por Função**: Treinamento específico
-- **Documentação**: Manuais e tutoriais
-- **Suporte Online**: Chat e vídeo-chamadas
-
-### Suporte Contínuo
-- **Help Desk**: Suporte técnico especializado
-- **Atualizações**: Melhorias constantes
-- **Consultoria**: Otimização de uso
-- **Comunidade**: Troca de experiências
-
 ## Conclusão
 
 O TechFinance App representa uma evolução na forma como empresas acessam e utilizam seus dados para tomada de decisão. Através de uma interface intuitiva e recursos avançados de análise, o aplicativo democratiza o acesso à inteligência de negócio, permitindo que gestores de todos os níveis tomem decisões mais assertivas e baseadas em dados.

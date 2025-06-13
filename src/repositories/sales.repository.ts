@@ -45,7 +45,8 @@ export class SalesRepository {
   async getSales(query: SalesQuerySchema): Promise<Sales[]> {
     const endpoint = this.endpoints.sales;
     const response = await api.get(endpoint, { params: query });
-    return response.data;
+    let data = response.data
+    return data;
   }
 
   async getTopProductsByQuantity(query: SalesQuerySchema): Promise<TopProducts[]> {

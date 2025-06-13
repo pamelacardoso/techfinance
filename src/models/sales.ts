@@ -1,20 +1,20 @@
 export interface Sales {
-  idVenda: number;
-  dataEmissao: string;
+  id_venda: number;
+  data_emissao: string;
   tipo: number;
-  descricaoTipo: string;
-  idCliente: number;
-  razaoCliente: string;
-  nomeFantasia: string;
-  idGrupoCliente: number;
-  descricaoGrupoCliente: string;
+  descricao_tipo: string;
+  id_cliente: number;
+  razao_cliente: string;
+  nome_fantasia: string;
+  id_grupo_cliente: number;
+  descricao_grupo_cliente: string;
   cidade: string;
   uf: string;
-  codigoProduto: string;
-  descricaoProduto: string;
-  idGrupoProduto: string;
-  descricaoGrupoProduto: string;
+  codigo_produto: string;
+  descricao_produto: string;
+  id_grupo_produto: string;
+  descricao_grupo_produto: string;
   qtde: number;
-  valorUnitario: string;
+  valor_unitario: string;
   total: string;
 }

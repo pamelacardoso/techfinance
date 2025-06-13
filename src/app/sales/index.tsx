@@ -20,14 +20,14 @@ export default function SalesScreen() {
   const loadSales = useCallback(async () => {
     try {
       setLoading(true)
-      const salesData = await salesRepository.getSales({ limite: 100 })
+      const salesData = await salesRepository.getSales({ limite: 50 })
       setSales(salesData)
     } catch (error) {
       console.error('Erro ao buscar dados:', error)
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [sales])
 
   useEffect(() => {
     loadSales()
@@ -35,8 +35,8 @@ export default function SalesScreen() {
 
   const filteredSales = sales.filter(
     (sale) =>
-      sale.descricaoProduto?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sale.nomeFantasia?.toLowerCase().includes(searchQuery.toLowerCase())
+      sale.descricao_produto?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      sale.nome_fantasia?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const renderSaleItem = useCallback(({ item, index }: { item: Sales; index: number }) => (
@@ -47,10 +47,10 @@ export default function SalesScreen() {
       <View className="flex-row justify-between items-start mb-2 sm:mb-3">
         <View className="flex-1 mr-3">
           <Text className="text-base sm:text-lg lg:text-xl font-bold text-gray-800" numberOfLines={2}>
-            {item.descricaoProduto}
+            {item.descricao_produto}
           </Text>
           <Text className="text-xs sm:text-sm text-gray-600 mt-1" numberOfLines={1}>
-            {item.nomeFantasia}
+            {item.nome_fantasia}
           </Text>
         </View>
         <View className="bg-blue-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
@@ -63,13 +63,13 @@ export default function SalesScreen() {
         {/* ID da Venda */}
         <View className="flex-row items-center">
           <MaterialIcons name="tag" size={14} color="#9CA3AF" className="sm:text-base mr-2" />
-          <Text className="text-xs sm:text-sm text-gray-600">ID Venda: {item.idVenda}</Text>
+          <Text className="text-xs sm:text-sm text-gray-600">ID Venda: {item.id_venda}</Text>
         </View>
 
         <View className="flex-row items-center">
           <MaterialIcons name="business" size={14} color="#9CA3AF" className="sm:text-base mr-2" />
           <Text className="text-xs sm:text-sm text-gray-600" numberOfLines={1}>
-            {item.razaoCliente}
+            {item.razao_cliente}
           </Text>
         </View>
         <View className="flex-row items-center">
@@ -84,7 +84,7 @@ export default function SalesScreen() {
             <Text className="text-xs sm:text-sm text-gray-600">Qtde: {item.qtde}</Text>
           </View>
           <Text className="text-xs sm:text-sm text-gray-600" numberOfLines={1}>
-            Valor Unit.: R$ {item.valorUnitario}
+            Valor Unit.: R$ {item.valor_unitario}
           </Text>
         </View>
       </View>
@@ -132,7 +132,7 @@ export default function SalesScreen() {
 
         <FlatList
           data={searchQuery ? filteredSales : sales}
-          keyExtractor={(item) => item.idVenda.toString()}
+          keyExtractor={(item) => `${item.id_venda}-${item.codigo_produto}`}
           renderItem={renderSaleItem}
           contentContainerStyle={{ paddingBottom: 20 }}
           showsVerticalScrollIndicator={false}

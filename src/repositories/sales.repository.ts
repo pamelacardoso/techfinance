@@ -17,7 +17,7 @@ export interface TopProducts {
   total_historico?: string;
   total?: string;
   qtde?: string;
-  id_venda?:string;
+  id_venda?: string;
 }
 
 export interface CompanyParticipation {

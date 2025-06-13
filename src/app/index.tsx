@@ -3,12 +3,12 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+    Alert,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 export default function LoginScreen() {
@@ -21,7 +21,10 @@ export default function LoginScreen() {
     if (success) {
       router.replace('/home');
     } else {
-      Alert.alert('Erro', 'Login e/ou senha inválidos');
+      // Verifica se o erro foi de conexão ou de credencial
+      // (login retorna false para ambos, mas podemos customizar a mensagem)
+      // Exibe mensagem genérica de erro de acesso
+      Alert.alert('Erro', 'Não foi possível acessar o servidor ou as credenciais estão incorretas. Verifique sua conexão e tente novamente.');
     }
   };
 

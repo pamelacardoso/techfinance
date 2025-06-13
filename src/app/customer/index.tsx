@@ -23,10 +23,18 @@ export default function CustomerSearch() {
   const searchCustomers = useCallback(async (query: string) => {
     setLoading(true)
     try {
-      const results = await customerRepository.search({ nome: query, limite: 10 })
-      setSearchResults(results)
+      let searchParams: { nome?: string; id_cliente?: string; limite?: number } = { limite: 10 };
+      if (!query) {
+        searchParams = { limite: 10 };
+      } else if (/^\d+$/.test(query.trim())) {
+        searchParams.id_cliente = query.trim();
+      } else {
+        searchParams.nome = query.trim();
+      }
+      const results = await customerRepository.search(searchParams);
+      setSearchResults(results);
     } catch (error) {
-      console.error('Erro ao buscar clientes:', error)
+      console.error('Erro ao buscar clientes:', error);
     } finally {
       setLoading(false)
     }

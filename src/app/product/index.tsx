@@ -22,10 +22,18 @@ export default function ProductSearch() {
   const searchProducts = useCallback(async (query: string) => {
     setLoading(true)
     try {
-      const results = await productRepository.search({ nome: query, limite: 10 })
-      setSearchResults(results)
+      let searchParams: { nome?: string; codigo?: string; limite?: number } = { limite: 10 };
+      if (!query) {
+        searchParams = { limite: 10 };
+      } else if (/^\d+$/.test(query.trim())) {
+        searchParams.codigo = query.trim();
+      } else {
+        searchParams.nome = query.trim();
+      }
+      const results = await productRepository.search(searchParams);
+      setSearchResults(results);
     } catch (error) {
-      console.error('Erro ao buscar produtos:', error)
+      console.error('Erro ao buscar produtos:', error);
     } finally {
       setLoading(false)
     }
@@ -94,7 +102,7 @@ export default function ProductSearch() {
         <FlatList
           data={searchResults}
           renderItem={renderProductItem}
-          keyExtractor={(item) => item.codigo}
+          keyExtractor={(item, index) => item.codigo ? String(item.codigo) : `produto-${index}`}
           contentContainerStyle={{
             paddingHorizontal: 12,
             paddingTop: 16,

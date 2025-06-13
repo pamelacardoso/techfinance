@@ -1,9 +1,11 @@
 import Header from '@/components/header'
+import MCPContextManager from '@/components/MCPContextManager'
+import { useMCP } from '@/hooks/useMCP'
 import { api } from '@/lib/api'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useLocalSearchParams } from 'expo-router'
 import { useCallback, useState } from 'react'
-import { ActivityIndicator, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
 
 interface RenegotiatedTitle {
@@ -35,6 +37,17 @@ export default function Assignments() {
   const [apiResponse, setApiResponse] = useState<ApiResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showMCPManager, setShowMCPManager] = useState(false)
+  const [currentContextId, setCurrentContextId] = useState<string | null>(null)
+
+  // Hook MCP
+  const {
+    analyzeReceivables,
+    createRenegotiationContext,
+    getRenegotiationPrompt,
+    isLoading: mcpLoading,
+    error: mcpError
+  } = useMCP()
 
   function parseValueSafely(valueStr: string | number): number {
     if (!valueStr && valueStr !== 0) return 0;
@@ -158,6 +171,107 @@ export default function Assignments() {
     }
   }, [assignment])
 
+  // Funções MCP
+  const analyzeWithMCP = useCallback(async () => {
+    if (!apiResponse?.renegotiated_titles || apiResponse.renegotiated_titles.length === 0) {
+      Alert.alert('Aviso', 'Execute uma análise primeiro para usar as funcionalidades inteligentes');
+      return;
+    }
+
+    try {
+      // Converter dados para formato MCP
+      const mcpData = apiResponse.renegotiated_titles.map(title => ({
+        id: title.title,
+        amount: parseValueSafely(title.value),
+        due_date: title.original_due_date,
+        renegotiation_date: title.renegotiation_date,
+        new_due_date: title.new_due_date,
+        status: 'renegotiated'
+      }));
+
+      // Executar análise MCP
+      const analysis = await analyzeReceivables(mcpData);
+
+      if (analysis) {
+        Alert.alert(
+          'Análise Inteligente Concluída',
+          `Tipo: ${analysis.analysis_type}\n` +
+          `Total: R$ ${analysis.total_receivables?.toLocaleString('pt-BR')}\n` +
+          `Em atraso: ${analysis.overdue_count} títulos\n` +
+          `% Inadimplência: ${analysis.overdue_percentage?.toFixed(2)}%`,
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Falha ao executar análise inteligente');
+    }
+  }, [apiResponse, analyzeReceivables]);
+
+  const createMCPContext = useCallback(async () => {
+    if (!apiResponse?.renegotiated_titles || apiResponse.renegotiated_titles.length === 0) {
+      Alert.alert('Aviso', 'Execute uma análise primeiro para criar uma análise salva');
+      return;
+    }
+
+    try {
+      const criteria = {
+        maxRenegotiationDays: parseInt(assignment) || 1,
+        priorityByAmount: true,
+        baseDate: new Date().toISOString()
+      };
+
+      const context = await createRenegotiationContext(apiResponse.renegotiated_titles, criteria);
+
+      if (context) {
+        setCurrentContextId(context.id);
+        Alert.alert('Sucesso', `Análise salva: ${context.name}`);
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Falha ao salvar análise');
+    }
+  }, [apiResponse, assignment, createRenegotiationContext]);
+
+  const generateMCPPrompt = useCallback(async () => {
+    if (!apiResponse?.renegotiated_titles || apiResponse.renegotiated_titles.length === 0) {
+      Alert.alert('Aviso', 'Execute uma análise primeiro para gerar um prompt');
+      return;
+    }
+
+    try {
+      const criteria = {
+        maxRenegotiationDays: parseInt(assignment) || 1,
+        priorityByAmount: true
+      };
+
+      const prompt = await getRenegotiationPrompt(
+        apiResponse.renegotiated_titles,
+        criteria,
+        new Date().toISOString()
+      );
+
+      if (prompt) {
+        Alert.alert(
+          'Prompt Inteligente Gerado',
+          prompt.substring(0, 200) + '...',
+          [
+            { text: 'Fechar' },
+            { text: 'Copiar', onPress: () => {
+              // Em uma implementação real, você copiaria para o clipboard
+              Alert.alert('Info', 'Prompt copiado (funcionalidade mock)');
+            }}
+          ]
+        );
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Falha ao gerar prompt inteligente');
+    }
+  }, [apiResponse, assignment, getRenegotiationPrompt]);
+
+  const handleContextSelected = useCallback((contextId: string) => {
+    setCurrentContextId(contextId);
+    Alert.alert('Sucesso', 'Análise selecionada para esta renegociação');
+  }, []);
+
   const renderRenegotiatedTitle = useCallback(({ item, index }: { item: RenegotiatedTitle; index: number }) => {
     if (!item || !item.title || !item.value) {
       return null; // Não renderiza se item inválido
@@ -199,10 +313,28 @@ export default function Assignments() {
         showsVerticalScrollIndicator={false}
       >
         <View className="py-6">
-          <Text className="text-3xl font-bold text-gray-800">Renegociação de Títulos</Text>
-          <Text className="text-lg text-gray-600 mt-2">
-            Visualize e simule renegociações.
-          </Text>
+          <View className="flex-row justify-between items-center">
+            <View>
+              <Text className="text-3xl font-bold text-gray-800">Renegociação de Títulos</Text>
+              <Text className="text-lg text-gray-600 mt-2">
+                Visualize e simule renegociações.
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => setShowMCPManager(true)}
+              className="p-3 bg-purple-600 rounded-lg"
+            >
+              <MaterialIcons name="settings" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+
+          {currentContextId && (
+            <View className="bg-purple-100 border border-purple-200 rounded-lg p-3 mt-4">
+              <Text className="text-purple-800 font-medium">
+                📊 Contexto MCP ativo: {currentContextId.slice(0, 8)}...
+              </Text>
+            </View>
+          )}
         </View>
 
         <View className="bg-white rounded-xl shadow-sm p-4 mb-6">
@@ -281,7 +413,79 @@ export default function Assignments() {
             )}
           </>
         )}
+
+        {/* MCP Actions Section */}
+        {apiResponse && (
+          <Animated.View
+            entering={FadeIn.delay(300).springify()}
+            className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-sm p-4 mb-6"
+          >
+            <Text className="text-lg font-bold text-white mb-3">🤖 Análises Inteligentes (MCP)</Text>
+            <View className="space-y-3">
+              <View className="flex-row space-x-3">
+                <TouchableOpacity
+                  onPress={analyzeWithMCP}
+                  disabled={mcpLoading}
+                  className="flex-1 bg-white/20 backdrop-blur rounded-lg p-3 flex-row items-center justify-center"
+                >
+                  {mcpLoading ? (
+                    <ActivityIndicator color="white" size="small" />
+                  ) : (
+                    <>
+                      <MaterialIcons name="analytics" size={20} color="white" />
+                      <Text className="text-white font-medium ml-2">Analisar com IA</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={createMCPContext}
+                  disabled={mcpLoading}
+                  className="flex-1 bg-white/20 backdrop-blur rounded-lg p-3 flex-row items-center justify-center"
+                >
+                  {mcpLoading ? (
+                    <ActivityIndicator color="white" size="small" />
+                  ) : (
+                    <>
+                      <MaterialIcons name="folder" size={20} color="white" />
+                      <Text className="text-white font-medium ml-2">Salvar Análise</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                onPress={generateMCPPrompt}
+                disabled={mcpLoading}
+                className="bg-white/20 backdrop-blur rounded-lg p-3 flex-row items-center justify-center"
+              >
+                {mcpLoading ? (
+                  <ActivityIndicator color="white" size="small" />
+                ) : (
+                  <>
+                    <MaterialIcons name="chat" size={20} color="white" />
+                    <Text className="text-white font-medium ml-2">Gerar Prompt Inteligente</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+
+            {mcpError && (
+              <View className="mt-3 bg-red-500/20 border border-red-300/30 rounded-lg p-3">
+                <Text className="text-red-100 text-sm">{mcpError}</Text>
+              </View>
+            )}
+          </Animated.View>
+        )}
       </Animated.ScrollView>
+
+      {showMCPManager && (
+        <MCPContextManager
+          visible={showMCPManager}
+          onClose={() => setShowMCPManager(false)}
+          onContextSelected={handleContextSelected}
+        />
+      )}
     </View>
   )
 }

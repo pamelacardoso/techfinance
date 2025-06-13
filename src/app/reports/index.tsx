@@ -47,6 +47,11 @@ export default function ReportsScreen() {
         { title: 'Top 10 Clientes \nem Qtde.', icon: 'people', onPress: () => handleNavigation('/reports/customers') },
         { title: 'Variação preços \n min-max', icon: 'auto-graph', onPress: () => handleNavigation('/reports/sales-min-max') },
         { title: 'Renegociação de Títulos', icon: 'assignment', onPress: () => handleNavigation('/reports/assignments') },
+        {
+            title: 'Análises IA',
+            icon: 'psychology',
+            onPress: () => handleNavigation('/mcp'),
+        },
     ];
 
     return (

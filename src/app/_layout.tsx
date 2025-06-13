@@ -46,6 +46,7 @@ export default function Layout() {
           <Stack.Screen name="reports/customers" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="reports/customers-by-value" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="reports/assignments" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
+          <Stack.Screen name="mcp/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="title/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />
         </Stack>

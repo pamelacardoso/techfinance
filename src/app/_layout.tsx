@@ -31,7 +31,7 @@ export default function Layout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="home" options={{ headerShown: false }} />
           <Stack.Screen name="chat/index" options={{
-            headerShown: true, title: 'Dinho Bot',
+            headerShown: false, title: 'Dinho Bot',
             headerStyle: { backgroundColor: '#000' }, headerTintColor: 'white'
           }} />
           <Stack.Screen name="product/index" options={{ headerShown: false }} initialParams={{ usuario: 'Admin' }} />

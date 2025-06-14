@@ -9,7 +9,7 @@ interface HeaderProps {
   username: string;
 }
 
-export default function Header({ username }: Readonly<HeaderProps>) {
+export default function Header({ username = 'Admin' }: Readonly<HeaderProps>) {
   const imageUri = useImageStore((state) => state.imageUri);
   const setImageUri = useImageStore((state) => state.setImageUri);
   const logout = useAuth((state) => state.logout);

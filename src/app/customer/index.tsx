@@ -152,12 +152,12 @@ export default function CustomerSearch() {
           ListEmptyComponent={
             <View className="flex-1 items-center justify-center py-8 sm:py-12 px-4">
               {loading ? (
-                <>
+                <View>
                   <ActivityIndicator size="large" color="#3B82F6" />
                   <Text className="text-gray-500 mt-4 text-sm sm:text-base">Buscando clientes...</Text>
-                </>
+                </View>
               ) : searchQuery.length > 0 ? (
-                <>
+                <View>
                   <MaterialIcons name="person-search" size={40} color="#D1D5DB" className="sm:text-5xl mb-4" />
                   <Text className="text-gray-500 text-center text-sm sm:text-base">
                     Nenhum cliente encontrado para "{searchQuery}"
@@ -165,14 +165,14 @@ export default function CustomerSearch() {
                   <Text className="text-gray-400 text-center mt-1 text-xs sm:text-sm">
                     Tente uma nova busca com termos diferentes
                   </Text>
-                </>
+                </View>
               ) : (
-                <>
+                <View>
                   <MaterialIcons name="people" size={40} color="#D1D5DB" className="sm:text-5xl mb-4" />
                   <Text className="text-gray-500 text-center text-sm sm:text-base">
                     Digite algo para começar a busca
                   </Text>
-                </>
+                </View>
               )}
             </View>
           }
@@ -189,7 +189,7 @@ export default function CustomerSearch() {
         <View className="flex-1 justify-center items-center bg-black/50 p-4">
           <View className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-md sm:max-w-lg">
             {selectedCustomer && (
-              <>
+              <View>
                 <View className="mb-4 sm:mb-6">
                   <Text className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-2">
                     {selectedCustomer.razao_cliente}
@@ -209,7 +209,7 @@ export default function CustomerSearch() {
                     </View>
                   </View>
                 </View>
-              </>
+              </View>
             )}
             <TouchableOpacity
               className="bg-blue-500 rounded-lg sm:rounded-xl mt-2 p-3 sm:p-4 active:bg-blue-600"

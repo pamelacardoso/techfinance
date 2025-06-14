@@ -3,29 +3,29 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    Alert,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Alert,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const login = useAuth((state) => state.login);
 
   const handleLogin = async () => {
+    setIsLoading(true);
     const success = await login(email, password);
     if (success) {
       router.replace('/home');
     } else {
-      // Verifica se o erro foi de conexão ou de credencial
-      // (login retorna false para ambos, mas podemos customizar a mensagem)
-      // Exibe mensagem genérica de erro de acesso
       Alert.alert('Erro', 'Não foi possível acessar o servidor ou as credenciais estão incorretas. Verifique sua conexão e tente novamente.');
     }
+    setIsLoading(false);
   };
 
   return (
@@ -91,9 +91,10 @@ export default function LoginScreen() {
             <TouchableOpacity
               onPress={handleLogin}
               className="bg-blue-600 rounded-xl py-4 px-6 mt-4 shadow-sm"
+              disabled={isLoading}
             >
               <Text className="text-white text-center font-semibold text-lg">
-                Entrar
+                {isLoading ? 'Carregando...' : 'Entrar'}
               </Text>
             </TouchableOpacity>
 

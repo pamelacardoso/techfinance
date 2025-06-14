@@ -4,7 +4,7 @@ import { OpenAIService } from "@/services/openai.service"
 import { convertStringToDecimal } from "@/utils/numbers"
 import { MaterialIcons } from "@expo/vector-icons"
 import { LinearGradient } from 'expo-linear-gradient'
-import { useLocalSearchParams } from "expo-router"
+import { router, useLocalSearchParams } from "expo-router"
 import { useCallback, useEffect, useState } from "react"
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from "react-native"
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated'
@@ -92,6 +92,14 @@ export default function SalesByQuantity() {
                 <View className="px-4 pt-6 pb-4">
                     <Text className="text-2xl font-bold text-gray-800">Top 10 Produtos em Qtde </Text>
                     <Text className="text-lg text-gray-600 mt-1 font-bold">Mais vendidos em quantidade</Text>
+                    <TouchableOpacity
+                        onPress={() => router.push('/reports/sales')}
+                        className="mt-2 bg-blue-100 rounded-xl px-4 py-2 w-48 flex-row items-center justify-center active:bg-blue-200"
+                        accessibilityLabel="Ver Top 10 Produtos em $"
+                    >
+                        <MaterialIcons name="attach-money" size={20} color="#3B82F6" />
+                        <Text className="text-blue-600 font-medium text-base ml-2">Ver por Valor</Text>
+                    </TouchableOpacity>
 
                     <View className="mt-6 space-y-4">
                         <View className="bg-white rounded-2xl shadow-lg shadow-blue-500/10 p-4">

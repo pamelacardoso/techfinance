@@ -34,7 +34,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         "expo-router"
     ],
     extra: {
-        openAiKey: process.env.OPENAI_API_KEY,
+        OPENAI_API_KEY: process.env.OPENAI_API_KEY || '',
+        API_BASE_URL: process.env.API_BASE_URL || 'https://techfinance-api.fly.dev/',
+        API_TOKEN: process.env.API_TOKEN || '',
         eas: {
             projectId: "b482baa0-eb1e-4501-a7b0-9878a9beb8fa",
         }

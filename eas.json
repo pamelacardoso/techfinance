@@ -6,13 +6,28 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "OPENAI_API_KEY": "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",
+        "API_BASE_URL": "https://techfinance-api.fly.dev/",
+        "API_TOKEN": "ronaldo"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "OPENAI_API_KEY": "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",
+        "API_BASE_URL": "https://techfinance-api.fly.dev/",
+        "API_TOKEN": "ronaldo"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "OPENAI_API_KEY": "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",
+        "API_BASE_URL": "https://techfinance-api.fly.dev/",
+        "API_TOKEN": "ronaldo"
+      }
     }
   },
   "submit": {

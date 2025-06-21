@@ -48,6 +48,11 @@ export default function ReportsScreen() {
         { title: 'Variação preços \n min-max', icon: 'auto-graph', onPress: () => handleNavigation('/reports/sales-min-max') },
         { title: 'Renegociação de Títulos', icon: 'assignment', onPress: () => handleNavigation('/reports/assignments') },
         {
+            title: 'Previsão de Vendas',
+            icon: 'trending-up',
+            onPress: () => handleNavigation('/reports/sales-forecast'),
+        },
+        {
             title: 'Análises IA',
             icon: 'psychology',
             onPress: () => handleNavigation('/mcp'),

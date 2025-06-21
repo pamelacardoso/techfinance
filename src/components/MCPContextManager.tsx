@@ -4,6 +4,73 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
+interface CreateContextFormProps {
+    isLoading: boolean;
+    onCancel: () => void;
+    onSubmit: (name: string, description: string) => void;
+}
+
+const CreateContextForm: React.FC<CreateContextFormProps> = ({ isLoading, onCancel, onSubmit }) => {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+
+    const handleSubmit = () => {
+        if (!name.trim() || !description.trim()) {
+            Alert.alert('Erro', 'Por favor, preencha todos os campos');
+            return;
+        }
+        onSubmit(name, description);
+    };
+
+    return (
+        <Animated.View entering={FadeIn.springify()} className="bg-white rounded-lg p-4 mb-4">
+            <Text className="text-lg font-bold text-gray-800 mb-4">Nova Análise Inteligente</Text>
+
+            <View className="mb-4">
+                <Text className="text-sm font-medium text-gray-700 mb-2">Nome da Análise</Text>
+                <TextInput
+                    className="p-3 border border-gray-300 rounded-lg text-gray-700"
+                    placeholder="Ex: Análise Financeira Trimestral"
+                    value={name}
+                    onChangeText={setName}
+                />
+            </View>
+
+            <View className="mb-4">
+                <Text className="text-sm font-medium text-gray-700 mb-2">Descrição</Text>
+                <TextInput
+                    className="p-3 border border-gray-300 rounded-lg text-gray-700"
+                    placeholder="Descreva o propósito e o escopo desta análise"
+                    value={description}
+                    onChangeText={setDescription}
+                    multiline
+                    numberOfLines={3}
+                />
+            </View>
+
+            <View className="flex-row space-x-3">
+                <TouchableOpacity
+                    onPress={onCancel}
+                    className="flex-1 p-3 bg-gray-200 rounded-lg"
+                >
+                    <Text className="text-center text-gray-700 font-medium">Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleSubmit}
+                    disabled={isLoading}
+                    className={`flex-1 p-3 rounded-lg ${isLoading ? 'bg-blue-300' : 'bg-blue-600'}`}
+                >
+                    {isLoading ? (
+                        <ActivityIndicator color="white" />
+                    ) : (
+                        <Text className="text-center text-white font-medium">Salvar</Text>
+                    )}
+                </TouchableOpacity>
+            </View>
+        </Animated.View>
+    );
+};
+
 interface MCPContextManagerProps {
   visible: boolean;
   onClose: () => void;
@@ -22,8 +89,6 @@ export default function MCPContextManager({ visible, onClose, onContextSelected 
   } = useMCP();
 
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newContextName, setNewContextName] = useState('');
-  const [newContextDescription, setNewContextDescription] = useState('');
 
   useEffect(() => {
     if (visible) {
@@ -31,15 +96,10 @@ export default function MCPContextManager({ visible, onClose, onContextSelected 
     }
   }, [visible, loadContexts]);
 
-  const handleCreateContext = async () => {
-    if (!newContextName.trim() || !newContextDescription.trim()) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
-      return;
-    }
-
+  const handleCreateContext = async (name: string, description: string) => {
     const context = await createContext(
-      newContextName,
-      newContextDescription,
+      name,
+      description,
       {
         createdAt: new Date().toISOString(),
         analysisType: 'general'
@@ -47,12 +107,12 @@ export default function MCPContextManager({ visible, onClose, onContextSelected 
     );
 
     if (context) {
-      setNewContextName('');
-      setNewContextDescription('');      setShowCreateForm(false);
+      setShowCreateForm(false);
       loadContexts();
       Alert.alert('Sucesso', 'Análise salva com sucesso');
     }
   };
+
   const handleDeleteContext = (contextId: string, contextName: string) => {
     Alert.alert(
       'Confirmar exclusão',
@@ -115,51 +175,6 @@ export default function MCPContextManager({ visible, onClose, onContextSelected 
     </Animated.View>
   );
 
-  const CreateContextForm = () => (
-    <Animated.View entering={FadeIn.springify()} className="bg-white rounded-lg p-4 mb-4">      <Text className="text-lg font-bold text-gray-800 mb-4">Nova Análise Inteligente</Text>
-
-      <View className="mb-4">
-        <Text className="text-sm font-medium text-gray-700 mb-2">Nome da Análise</Text>        <TextInput
-          className="p-3 border border-gray-300 rounded-lg text-gray-700"
-          placeholder="Ex: Análise Cliente ABC"
-          value={newContextName}
-          onChangeText={setNewContextName}
-        />
-      </View>
-
-      <View className="mb-4">
-        <Text className="text-sm font-medium text-gray-700 mb-2">Descrição</Text>
-        <TextInput
-          className="p-3 border border-gray-300 rounded-lg text-gray-700"
-          placeholder="Descreva o propósito desta análise"
-          value={newContextDescription}
-          onChangeText={setNewContextDescription}
-          multiline
-          numberOfLines={3}
-        />
-      </View>
-
-      <View className="flex-row space-x-3">
-        <TouchableOpacity
-          onPress={() => setShowCreateForm(false)}
-          className="flex-1 p-3 bg-gray-200 rounded-lg"
-        >
-          <Text className="text-center text-gray-700 font-medium">Cancelar</Text>
-        </TouchableOpacity>        <TouchableOpacity
-          onPress={handleCreateContext}
-          disabled={isLoading}
-          className={`flex-1 p-3 rounded-lg ${isLoading ? 'bg-blue-300' : 'bg-blue-600'}`}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text className="text-center text-white font-medium">Salvar</Text>
-          )}
-        </TouchableOpacity>
-      </View>
-    </Animated.View>
-  );
-
   return (
     <Modal
       visible={visible}
@@ -169,12 +184,13 @@ export default function MCPContextManager({ visible, onClose, onContextSelected 
     >
       <View className="flex-1 bg-gray-50">
         {/* Header */}
-        <View className="bg-white px-4 py-6 border-b border-gray-200">          <View className="flex-row justify-between items-center">
-            <Text className="text-2xl font-bold text-gray-800">Gerenciar Análises</Text>
-            <TouchableOpacity onPress={onClose}>
-              <MaterialIcons name="close" size={24} color="#6B7280" />
-            </TouchableOpacity>
-          </View>
+        <View className="bg-white px-4 py-6 border-b border-gray-200">
+          <View className="flex-row justify-between items-center">
+          <Text className="text-2xl font-bold text-gray-800">Gerenciar Análises</Text>
+          <TouchableOpacity onPress={onClose}>
+            <MaterialIcons name="close" size={24} color="#6B7280" />
+          </TouchableOpacity>
+        </View>
           <Text className="text-gray-600 mt-1">
             Gerencie suas análises salvas e histórico
           </Text>
@@ -195,23 +211,29 @@ export default function MCPContextManager({ visible, onClose, onContextSelected 
           )}
 
           {/* Create Button */}
-          {!showCreateForm && (            <TouchableOpacity
-              onPress={() => setShowCreateForm(true)}
-              className="bg-blue-600 rounded-lg p-4 mb-4 flex-row items-center justify-center"
-            >
-              <MaterialIcons name="add" size={24} color="white" />
-              <Text className="text-white font-medium ml-2">Nova Análise</Text>
-            </TouchableOpacity>
+          {!showCreateForm && (<TouchableOpacity
+            onPress={() => setShowCreateForm(true)}
+            className="bg-blue-600 rounded-lg p-4 mb-4 flex-row items-center justify-center"
+          >
+            <MaterialIcons name="add" size={24} color="white" />
+            <Text className="text-white font-medium ml-2">Nova Análise</Text>
+          </TouchableOpacity>
           )}
 
           {/* Create Form */}
-          {showCreateForm && <CreateContextForm />}
+          {showCreateForm && (
+            <CreateContextForm
+                isLoading={isLoading}
+                onCancel={() => setShowCreateForm(false)}
+                onSubmit={handleCreateContext}
+            />
+           )}
 
           {/* Loading */}
-          {isLoading && !showCreateForm && (            <View className="flex-1 justify-center items-center">
-              <ActivityIndicator size="large" color="#3B82F6" />
-              <Text className="text-gray-600 mt-2">Carregando análises...</Text>
-            </View>
+          {isLoading && !showCreateForm && (<View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="large" color="#3B82F6" />
+            <Text className="text-gray-600 mt-2">Carregando análises...</Text>
+          </View>
           )}
 
           {/* Contexts List */}
@@ -225,13 +247,13 @@ export default function MCPContextManager({ visible, onClose, onContextSelected 
           )}
 
           {/* Empty State */}
-          {!isLoading && contexts.length === 0 && !showCreateForm && (            <View className="flex-1 justify-center items-center">
-              <MaterialIcons name="folder-open" size={64} color="#D1D5DB" />
-              <Text className="text-gray-500 text-lg mt-4">Nenhuma análise encontrada</Text>
-              <Text className="text-gray-400 text-center mt-2">
-                Crie uma nova análise para começar a organizar seus dados
-              </Text>
-            </View>
+          {!isLoading && contexts.length === 0 && !showCreateForm && (<View className="flex-1 justify-center items-center">
+            <MaterialIcons name="folder-open" size={64} color="#D1D5DB" />
+            <Text className="text-gray-500 text-lg mt-4">Nenhuma análise encontrada</Text>
+            <Text className="text-gray-400 text-center mt-2">
+              Crie uma nova análise para começar a organizar seus dados
+            </Text>
+          </View>
           )}
         </View>
       </View>

@@ -3,7 +3,7 @@ import { z } from 'zod';
 const envSchema = z.object({
     OPENAI_API_KEY: z.string().default(''),
     API_BASE_URL: z.string().default('https://techfinance-api.fly.dev/'),
-    API_FORECAST_URL: z.string().default('http://10.0.2.2:8000'),
+    API_FORECAST_URL: z.string().default('https://techfinance-previsao.fly.dev/'),
     API_TOKEN: z.string().default('ronaldo'),
 });
 

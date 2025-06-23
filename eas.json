@@ -28,6 +28,16 @@
         "API_TOKEN": "ronaldo",
         "API_FORECAST_URL": "https://techfinance-previsao.fly.dev/"
       }
+    },
+    "apk": {
+      "android": {
+        "buildType": "apk"
+      },
+      "distribution": "internal",
+      "env": {
+        "API_BASE_URL": "https://techfinance-api.fly.dev/",
+        "API_FORECAST_URL": "https://techfinance-previsao.fly.dev/"
+      }
     }
   },
   "submit": {

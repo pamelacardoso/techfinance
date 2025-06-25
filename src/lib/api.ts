@@ -7,3 +7,11 @@ export const api = axios.create({
         'Authorization': `Bearer ${env.API_TOKEN}`
     },
 });
+
+
+export const apiForecast = axios.create({
+    baseURL: env.API_FORECAST_URL,
+    headers: {
+        'Authorization': `Bearer ${env.API_TOKEN}`
+    },
+});

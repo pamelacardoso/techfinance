@@ -1,5 +1,5 @@
 import Header from '@/components/header';
-import { env } from '@/config/env';
+import { apiForecast } from '@/lib/api';
 import React, { useState } from 'react';
 import {
     ActivityIndicator,
@@ -51,19 +51,13 @@ const SalesForecastScreen = () => {
         setCurrentPage(1);
 
         try {
-            const response = await fetch(`${env.API_FORECAST_URL}/previsao/vendas?dias_previsao=${days}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${env.API_TOKEN}`,
-                },
-            });
+            const response = await apiForecast.post(`/previsao/vendas?dias_previsao=${days}`);
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error('Falha ao buscar a previsão de vendas');
             }
 
-            const data: ForecastData[] = await response.json();
+            const data: ForecastData[] = response.data;
             setForecast(data);
         } catch (e: any) {
             setError(e.message);
